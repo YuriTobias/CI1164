@@ -18,8 +18,13 @@ typedef union {
 
 void calcIntervals(Float_t *numbers, Float_t **intervals) {
     for (int i = 0; i < QUANT; i++) {
-        intervals[i][0].i = numbers[i].i - 1;
-        intervals[i][1].i = numbers[i].i + 1;
+        if (numbers[i].f == 0) {
+            intervals[i][0].f = 0;
+            intervals[i][1].f = 0;
+        } else {
+            intervals[i][0].i = numbers[i].i - 1;
+            intervals[i][1].i = numbers[i].i + 1;
+        }
     }
 }
 
@@ -37,17 +42,37 @@ Float_t *calcIntervalSub(Float_t *operandA, Float_t *operandB) {
     return result;
 }
 
+float minf(float a, float b, float c, float d) {
+    float min = a;
+    if (b < min) min = b;
+    if (c < min) min = c;
+    if (d < min) min = d;
+    return min;
+}
+
+float maxf(float a, float b, float c, float d) {
+    float max = a;
+    if (b > max) max = b;
+    if (c > max) max = c;
+    if (d > max) max = d;
+    return max;
+}
+
+void printInterval(Float_t *interval) { printf("[%1.9e, %1.9e]", interval[0].f, interval[1].f); }
+
 Float_t *calcIntervalMult(Float_t *operandA, Float_t *operandB) {
     Float_t *result = malloc(sizeof(Float_t) * 2);
-    result[0].f = operandA[0].f * operandB[0].f;
-    result[1].f = operandA[1].f * operandB[1].f;
+    result[0].f =
+        minf(operandA[0].f * operandB[0].f, operandA[0].f * operandB[1].f, operandA[1].f * operandB[0].f, operandA[1].f * operandB[1].f);
+    result[1].f =
+        maxf(operandA[0].f * operandB[0].f, operandA[0].f * operandB[1].f, operandA[1].f * operandB[0].f, operandA[1].f * operandB[1].f);
     return result;
 }
 
 Float_t *calcIntervalDiv(Float_t *operandA, Float_t *operandB) {
     Float_t *result = malloc(sizeof(Float_t) * 2);
-    result[0].f = operandA[0].f / operandB[1].f;
-    result[1].f = operandA[1].f / operandB[0].f;
+    result[0].f = operandA[0].f / operandB[0].f;
+    result[1].f = operandA[1].f / operandB[1].f;
     return result;
 }
 
@@ -67,11 +92,54 @@ void printOutput(Float_t *numbers, char *operators) {
     printf("%.2f\n", numbers[QUANT - 1].f);
 }
 
-// void printInterval(Float_t *interval) { printf("[%f, %f]\n", interval[0].f, interval[1].f); }
+void printIntervals(Float_t **intervals) {
+    for (int i = 0; i < QUANT; i++) printInterval(intervals[i]);
+}
 
-// void printIntervals(Float_t **intervals) {
-//     for (int i = 0; i < QUANT; i++) printInterval(intervals[i]);
-// }
+void printResult(int i, Float_t *operandA, Float_t *operandB, Float_t *result, char operator) {
+    printf("%d:\n", i);
+    printInterval(operandA);
+    printf(" %c ", operator);
+    printInterval(operandB);
+    printf(" =\n");
+    printInterval(result);
+    printf("\nEA: %1.8e; ER: %1.8e; ULPs: %.0f\n\n", fabs(result[1].f - result[0].f), fabs(result[1].f - result[0].f) / result[0].f,
+           (int)fabs(result[1].f - result[0].f) / FLT_EPSILON);
+}
+
+Float_t *calcExpression(Float_t **intervals, char *operators) {
+    Float_t *result = malloc(sizeof(Float_t) * 2);
+    Float_t *prevResult = malloc(sizeof(Float_t) * 2);
+    result[0].f = intervals[0][0].f;
+    result[1].f = intervals[0][1].f;
+
+    for (int i = 0; i < QUANT - 1; i++) {
+        prevResult[0] = result[0];
+        prevResult[1] = result[1];
+        switch (operators[i]) {
+            case '+':
+                result = calcIntervalSum(result, intervals[i + 1]);
+                break;
+            case '-':
+                result = calcIntervalSub(result, intervals[i + 1]);
+                break;
+            case '*':
+                result = calcIntervalMult(result, intervals[i + 1]);
+                break;
+            case '/':
+                if (intervals[i + 1][1].f == 0 || intervals[i + 1][0].f == 0) {
+                    result[0].f = -INFINITY;
+                    result[1].f = INFINITY;
+                } else {
+                    result = calcIntervalDiv(result, intervals[i + 1]);
+                }
+                break;
+        }
+        printResult(i + 1, prevResult, intervals[i + 1], result, operators[i]);
+    }
+
+    return result;
+}
 
 int main() {
     Float_t *inputNumbers = malloc(sizeof(Float_t) * QUANT);
@@ -81,8 +149,7 @@ int main() {
 
     handleInput(inputNumbers, inputOperators);
     calcIntervals(inputNumbers, inputIntervals);
-    printOutput(inputNumbers, inputOperators);
-    printIntervals(inputIntervals);
+    calcExpression(inputIntervals, inputOperators);
 
     return 0;
 }

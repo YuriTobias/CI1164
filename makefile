@@ -1,4 +1,4 @@
-CFLAGS = -Wall -g
+CFLAGS = -lm -Wall -g 
 
 CC = gcc
 
