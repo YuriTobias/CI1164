@@ -15,3 +15,5 @@ clean:
 
 purge: 
 	-rm -f $(objects) calc
+
+rebuild: purge all
