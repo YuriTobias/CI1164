@@ -32,6 +32,8 @@ Float_t *calcIntervalSum(Float_t *operandA, Float_t *operandB) {
     Float_t *result = malloc(sizeof(Float_t) * 2);
     result[0].f = operandA[0].f + operandB[0].f;
     result[1].f = operandA[1].f + operandB[1].f;
+    result[0].i = result[0].i-1;
+    result[1].i = result[1].i+1;
     return result;
 }
 
@@ -39,6 +41,8 @@ Float_t *calcIntervalSub(Float_t *operandA, Float_t *operandB) {
     Float_t *result = malloc(sizeof(Float_t) * 2);
     result[0].f = operandA[0].f - operandB[1].f;
     result[1].f = operandA[1].f - operandB[0].f;
+    result[0].i = result[0].i-1;
+    result[1].i = result[1].i+1;
     return result;
 }
 
@@ -58,7 +62,7 @@ float maxf(float a, float b, float c, float d) {
     return max;
 }
 
-void printInterval(Float_t *interval) { printf("[%1.9e, %1.9e]", interval[0].f, interval[1].f); }
+void printInterval(Float_t *interval) { printf("[%1.8e, %1.8e]", interval[0].f, interval[1].f); }
 
 Float_t *calcIntervalMult(Float_t *operandA, Float_t *operandB) {
     Float_t *result = malloc(sizeof(Float_t) * 2);
@@ -66,13 +70,19 @@ Float_t *calcIntervalMult(Float_t *operandA, Float_t *operandB) {
         minf(operandA[0].f * operandB[0].f, operandA[0].f * operandB[1].f, operandA[1].f * operandB[0].f, operandA[1].f * operandB[1].f);
     result[1].f =
         maxf(operandA[0].f * operandB[0].f, operandA[0].f * operandB[1].f, operandA[1].f * operandB[0].f, operandA[1].f * operandB[1].f);
+    
+    result[0].i = result[0].i-1;
+    result[1].i = result[1].i+1;
+    
     return result;
 }
 
 Float_t *calcIntervalDiv(Float_t *operandA, Float_t *operandB) {
     Float_t *result = malloc(sizeof(Float_t) * 2);
-    result[0].f = operandA[0].f / operandB[0].f;
-    result[1].f = operandA[1].f / operandB[1].f;
+    result[0].f = operandA[0].f / operandB[1].f;
+    result[1].f = operandA[1].f / operandB[0].f;
+    result[0].i = result[0].i-1;
+    result[1].i = result[1].i+1;
     return result;
 }
 
@@ -103,8 +113,8 @@ void printResult(int i, Float_t *operandA, Float_t *operandB, Float_t *result, c
     printInterval(operandB);
     printf(" =\n");
     printInterval(result);
-    printf("\nEA: %1.8e; ER: %1.8e; ULPs: %.0f\n\n", fabs(result[1].f - result[0].f), fabs(result[1].f - result[0].f) / result[0].f,
-           (int)fabs(result[1].f - result[0].f) / FLT_EPSILON);
+    printf("\nEA: %1.8e; ER: %1.8e; ULPs: %d\n\n", fabs(result[1].f - result[0].f), fabs(result[1].f - result[0].f) / result[0].f,
+           result[1].i-result[0].i-1);
 }
 
 Float_t *calcExpression(Float_t **intervals, char *operators) {
