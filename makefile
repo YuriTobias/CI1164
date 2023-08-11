@@ -5,10 +5,10 @@ CC = gcc
 	objects = main.o
 
 all: main.o
-	$(CC) $(CFLAGS) main.o -o calc 
+	$(CC) main.o -o calc $(CFLAGS)
 
 main.o: main.c 
-	$(CC) $(CFLAGS) main.c -c
+	$(CC) main.c -c $(CFLAGS) 
 
 clean:
 	-rm -f $(objects)

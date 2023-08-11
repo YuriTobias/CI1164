@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <fenv.h>
 
 #define QUANT 5
 
@@ -32,8 +33,8 @@ Float_t *calcIntervalSum(Float_t *operandA, Float_t *operandB) {
     Float_t *result = malloc(sizeof(Float_t) * 2);
     result[0].f = operandA[0].f + operandB[0].f;
     result[1].f = operandA[1].f + operandB[1].f;
-    result[0].i = result[0].i-1;
-    result[1].i = result[1].i+1;
+    //result[0].i = result[0].i-1;
+    result[1].f = nextafterf(result[1].f, INFINITY);
     return result;
 }
 
@@ -41,8 +42,8 @@ Float_t *calcIntervalSub(Float_t *operandA, Float_t *operandB) {
     Float_t *result = malloc(sizeof(Float_t) * 2);
     result[0].f = operandA[0].f - operandB[1].f;
     result[1].f = operandA[1].f - operandB[0].f;
-    result[0].i = result[0].i-1;
-    result[1].i = result[1].i+1;
+    //result[0].i = result[0].i-1;
+    result[1].f = nextafterf(result[1].f, INFINITY);
     return result;
 }
 
@@ -71,8 +72,8 @@ Float_t *calcIntervalMult(Float_t *operandA, Float_t *operandB) {
     result[1].f =
         maxf(operandA[0].f * operandB[0].f, operandA[0].f * operandB[1].f, operandA[1].f * operandB[0].f, operandA[1].f * operandB[1].f);
     
-    result[0].i = result[0].i-1;
-    result[1].i = result[1].i+1;
+    //result[0].i = result[0].i-1;
+    result[1].f = nextafterf(result[1].f, INFINITY);
     
     return result;
 }
@@ -81,8 +82,8 @@ Float_t *calcIntervalDiv(Float_t *operandA, Float_t *operandB) {
     Float_t *result = malloc(sizeof(Float_t) * 2);
     result[0].f = operandA[0].f / operandB[1].f;
     result[1].f = operandA[1].f / operandB[0].f;
-    result[0].i = result[0].i-1;
-    result[1].i = result[1].i+1;
+    //result[0].i = result[0].i-1;
+    result[1].f = nextafterf(result[1].f, INFINITY);
     return result;
 }
 
@@ -152,6 +153,7 @@ Float_t *calcExpression(Float_t **intervals, char *operators) {
 }
 
 int main() {
+    fesetround(FE_DOWNWARD);
     Float_t *inputNumbers = malloc(sizeof(Float_t) * QUANT);
     Float_t **inputIntervals = malloc(sizeof(Float_t *) * QUANT);
     for (int i = 0; i < QUANT; i++) inputIntervals[i] = malloc(sizeof(Float_t) * 2);
