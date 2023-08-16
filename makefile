@@ -1,19 +1,28 @@
-CFLAGS = -lm -Wall -g 
-
+CFLAGS = -lm -Wall -g
 CC = gcc
+objects = main.o interval_operations.o
 
-	objects = main.o
+all: calc
 
-all: main.o
-	$(CC) main.o -o calc $(CFLAGS)
+calc: $(objects)
+	$(CC) $(objects) -o calc $(CFLAGS)
 
-main.o: main.c 
-	$(CC) main.c -c $(CFLAGS) 
+main.o: main.c interval_operations.h
+	$(CC) -c main.c $(CFLAGS)
+
+interval_operations.o: interval_operations.c interval_operations.h
+	$(CC) -c interval_operations.c $(CFLAGS)
 
 clean:
 	-rm -f $(objects)
 
-purge: 
-	-rm -f $(objects) calc
+purge: clean
+	-rm -f calc
 
-rebuild: purge all
+clear:
+	clear
+
+exec: calc
+	./calc
+
+rebuild: purge all clear exec
