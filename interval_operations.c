@@ -74,8 +74,8 @@ void printResult(int i, Float_t *operandA, Float_t *operandB, Float_t *result, c
     printInterval(operandB);
     printf(" =\n");
     printInterval(result);
-    printf("\nEA: %1.8e; ER: %1.8e; ULPs: %d\n\n", fabs(result[1].f - result[0].f), fabs(result[1].f - result[0].f) / result[0].f,
-           result[1].i - result[0].i - 1);
+    printf("\nEA: %1.8e; ER: %1.8e; ULPs: %d\n\n", fabs(result[1].f - result[0].f), fabs((result[1].f - result[0].f) / result[0].f),
+           abs(result[1].i - result[0].i - 1));
 }
 
 void processExpression(Float_t *inputNumbers, char *operators) {
