@@ -72,7 +72,7 @@ int calcULP(Float_t a, Float_t b) {
         Float_t aux[2];
         aux[0].f = -0.0;
         aux[1].f = +0.0;
-        return calcULP(a, aux[0]) + calcULP(aux[1], b);
+        return calcULP(a, aux[0]) + calcULP(aux[1], b) - 1;
     } else {
         return abs(b.i - a.i - 1);
     }
@@ -85,7 +85,7 @@ void printResult(int i, Float_t *operandA, Float_t *operandB, Float_t *result, c
     printInterval(operandB);
     printf(" =\n");
     printInterval(result);
-    printf("\nEA: %1.8e; ER: %1.8e; ULPs: %d\n\n", (result[1].f - result[0].f), fabs((result[1].f - result[0].f) / result[0].f),
+    printf("\nEA: %1.8e; ER: %1.8e; ULPs: %d\n\n", (result[1].f - result[0].f), ((result[1].f - result[0].f) / result[0].f),
            calcULP(result[0], result[1]));
 }
 

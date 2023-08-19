@@ -17,3 +17,4 @@ Especificades:
 -   A implementação calcula a ULP através da diferença entre as representações inteiras dos intervalos superior e inferior menos um apenas em casos em que ambos possuam mesmo sinal. Caso contrário, o cálculo será a soma das ULPS entre o valor negativo e zero e entre zero e o valor positivo, conforme instruído pelo professor em encontro.
 -   O Makefile gera um executável nomeado calc, vide não haver especificação de nomenclatura no enunciado.
 -   Não foram adicionados casos de teste conforme não-necessidade apontada pelo professor em encontro.
+-   EA, ER e ULPs não foram postas em módulo visando conferir com exemplo dado no enunciado.
