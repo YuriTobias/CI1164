@@ -67,6 +67,17 @@ void handleInput(Float_t *numbers, char *operators) {
     return;
 }
 
+int calcULP(Float_t a, Float_t b) {
+    if (a.parts.sign == 1 && b.parts.sign == 0) {
+        Float_t aux[2];
+        aux[0].f = -0.0;
+        aux[1].f = +0.0;
+        return calcULP(a, aux[0]) + calcULP(aux[1], b);
+    } else {
+        return abs(b.i - a.i - 1);
+    }
+}
+
 void printResult(int i, Float_t *operandA, Float_t *operandB, Float_t *result, char operation) {
     printf("%d:\n", i);
     printInterval(operandA);
@@ -74,8 +85,8 @@ void printResult(int i, Float_t *operandA, Float_t *operandB, Float_t *result, c
     printInterval(operandB);
     printf(" =\n");
     printInterval(result);
-    printf("\nEA: %1.8e; ER: %1.8e; ULPs: %d\n\n", fabs(result[1].f - result[0].f), fabs((result[1].f - result[0].f) / result[0].f),
-           abs(result[1].i - result[0].i - 1));
+    printf("\nEA: %1.8e; ER: %1.8e; ULPs: %d\n\n", (result[1].f - result[0].f), fabs((result[1].f - result[0].f) / result[0].f),
+           calcULP(result[0], result[1]));
 }
 
 void processExpression(Float_t *inputNumbers, char *operators) {
