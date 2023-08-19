@@ -2,7 +2,7 @@
 
 Desenvolvida por:
 
--   Izalorran Bonaldi (GRR2021XXXX);
+-   Izalorran Bonaldi (GRR20210582);
 -   Yuri Junqueira Tobias (GRR20211767);
 
 Data de entrega: 19/08/2023
@@ -15,3 +15,5 @@ Especificades:
 -   Nossa implementação encontra resultados de ULP inconsistentes para ULP entre valores especiais como inf e nan, levando ao estouro dos valores inteiros representáveis em int.
 -   Nossa implementação encontra resultados imprecisos em operações que deveriam resultar em zero (casos como 2-2), obtendo resultados com ULP e erros relativos consideravelmente altos.
 -   A implementação calcula a ULP através da diferença entre as representações inteiras dos intervalos superior e inferior menos um apenas em casos em que ambos possuam mesmo sinal. Caso contrário, o cálculo será a soma das ULPS entre o valor negativo e zero e entre zero e o valor positivo, conforme instruído pelo professor em encontro.
+-   O Makefile gera um executável nomeado calc, vide não haver especificação de nomenclatura no enunciado.
+-   Não foram adicionados casos de teste conforme não-necessidade apontada pelo professor em encontro.
