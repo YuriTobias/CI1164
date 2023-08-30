@@ -5,6 +5,16 @@
 
 #define N 10000
 
+void retrossubs(double **A, double *b, double *x, int n) {
+    for (int i = n - 1; i >= 0; i--) {
+        x[i] = b[i];
+        for (int j = i + 1; j < n; j++) {
+            x[i] -= A[i][j] * x[j];
+        }
+        x[i] /= A[i][i];
+    }
+}
+
 void initializeArrays(double ***A, double **b, double **x, int *n) {
     scanf("%d", n);
 
@@ -33,6 +43,14 @@ void printInputs(double **A, double *b, int n) {
     }
 }
 
+void printResults(double *x, int n) {
+    printf("X=[");
+    for (int i = 0; i < n; i++) {
+        printf("%lf%c", x[i], i == n - 1 ? ']' : ' ');
+    }
+    printf("\n");
+}
+
 int main(int argc, char *argv[]) {
     // LIKWID_MARKER_INIT;
 
@@ -47,6 +65,8 @@ int main(int argc, char *argv[]) {
 
     initializeArrays(&A, &b, &x, &n);
     printInputs(A, b, n);
+    retrossubs(A, b, x, n);
+    printResults(x, n);
 
     return 0;
 }
