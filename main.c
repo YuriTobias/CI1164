@@ -15,6 +15,55 @@ void retrossubs(double **A, double *b, double *x, int n) {
     }
 }
 
+void eliminacaoGauss(double **A, double *b, int n) {
+    for (int i = 0; i < n; i++) {
+        for (int k = i + 1; k < n; k++) {
+            double m = A[k][i] / A[i][i];
+            A[k][i] = 0;
+            for (int j = i + 1; j < n; j++) {
+                A[k][j] -= m * A[i][j];
+            }
+            b[k] -= m * b[i];
+        }
+    }
+}
+
+int encontraMax(double **A, int i, int n) {
+    int max = i;
+    for (int j = i + 1; j < n; j++) {
+        if (A[j][i] > A[max][i]) {
+            max = j;
+        }
+    }
+    return max;
+}
+
+void trocaLinha(double **A, double *b, int i, int iPivo) {
+    double *aux = A[i];
+    A[i] = A[iPivo];
+    A[iPivo] = aux;
+    double auxB = b[i];
+    b[i] = b[iPivo];
+    b[iPivo] = auxB;
+}
+
+void eliminacaoGaussPivoteamento(double **A, double *b, int n) {
+    for (int i = 0; i < n; i++) {
+        int iPivo = encontraMax(A, i, n);
+        if (iPivo != i) {
+            trocaLinha(A, b, i, iPivo);
+        }
+        for (int k = i + 1; k < n; k++) {
+            double m = A[k][i] / A[i][i];
+            A[k][i] = 0;
+            for (int j = i + 1; j < n; j++) {
+                A[k][j] -= m * A[i][j];
+            }
+            b[k] -= m * b[i];
+        }
+    }
+}
+
 void initializeArrays(double ***A, double **b, double **x, int *n) {
     scanf("%d", n);
 
@@ -64,6 +113,10 @@ int main(int argc, char *argv[]) {
     int n;
 
     initializeArrays(&A, &b, &x, &n);
+    printf("Step 1:\n");
+    printInputs(A, b, n);
+    eliminacaoGauss(A, b, n);
+    printf("Step 2:\n");
     printInputs(A, b, n);
     retrossubs(A, b, x, n);
     printResults(x, n);
