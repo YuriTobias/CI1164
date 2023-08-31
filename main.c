@@ -5,7 +5,31 @@
 
 #define N 10000
 
-void retrossubs(double **A, double *b, double *x, int n) {
+void mallocMatrix(double ***matrix, int size) {
+    *matrix = (double **)malloc(size * sizeof(double *));
+    for (int i = 0; i < size; i++) {
+        (*matrix)[i] = (double *)malloc(size * sizeof(double));
+    }
+}
+
+void freeMatrix(double ***matrix, int size) {
+    for (int i = 0; i < size; i++) {
+        free((*matrix)[i]);
+    }
+    free(*matrix);
+    *matrix = NULL;
+}
+
+void copySystem(double **srcA, double ***destA, double *srcB, double **destB, int size) {
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
+            (*destA)[i][j] = srcA[i][j];
+        }
+        (*destB)[i] = srcB[i];
+    }
+}
+
+void backSubstitution(double **A, double *b, double *x, int n) {
     for (int i = n - 1; i >= 0; i--) {
         x[i] = b[i];
         for (int j = i + 1; j < n; j++) {
@@ -15,7 +39,7 @@ void retrossubs(double **A, double *b, double *x, int n) {
     }
 }
 
-void eliminacaoGauss(double **A, double *b, int n) {
+void gaussElim(double **A, double *b, int n) {
     for (int i = 0; i < n; i++) {
         for (int k = i + 1; k < n; k++) {
             double m = A[k][i] / A[i][i];
@@ -28,7 +52,7 @@ void eliminacaoGauss(double **A, double *b, int n) {
     }
 }
 
-void eliminacaoGaussSemPivoteamento(double **A, double *b, int n) {
+void gaussElimAlt(double **A, double *b, int n) {
     for (int i = 0; i < n; i++) {
         double aii = A[i][i];
         for (int j = 0; j < n; j++) {
@@ -46,7 +70,7 @@ void eliminacaoGaussSemPivoteamento(double **A, double *b, int n) {
     }
 }
 
-int encontraMax(double **A, int i, int n) {
+int findPivotLine(double **A, int i, int n) {
     int max = i;
     for (int j = i + 1; j < n; j++) {
         if (A[j][i] > A[max][i]) {
@@ -56,7 +80,7 @@ int encontraMax(double **A, int i, int n) {
     return max;
 }
 
-void trocaLinha(double **A, double *b, int i, int iPivo) {
+void swapSystemLines(double **A, double *b, int i, int iPivo) {
     double *aux = A[i];
     A[i] = A[iPivo];
     A[iPivo] = aux;
@@ -65,11 +89,11 @@ void trocaLinha(double **A, double *b, int i, int iPivo) {
     b[iPivo] = auxB;
 }
 
-void eliminacaoGaussPivoteamento(double **A, double *b, int n) {
+void gaussElimPivot(double **A, double *b, int n) {
     for (int i = 0; i < n; i++) {
-        int iPivo = encontraMax(A, i, n);
+        int iPivo = findPivotLine(A, i, n);
         if (iPivo != i) {
-            trocaLinha(A, b, i, iPivo);
+            swapSystemLines(A, b, i, iPivo);
         }
         for (int k = i + 1; k < n; k++) {
             double m = A[k][i] / A[i][i];
@@ -82,32 +106,31 @@ void eliminacaoGaussPivoteamento(double **A, double *b, int n) {
     }
 }
 
-void eliminacaoGaussSemMultiplicador(double **A, double *b, int n) {
+void gaussElimPivotNoMult(double **A, double *b, int n) {
     for (int i = 0; i < n; i++) {
-        int iPivo = encontraMax(A, i, n);
+        int iPivo = findPivotLine(A, i, n);
         if (iPivo != i) {
-            trocaLinha(A, b, i, iPivo);
+            swapSystemLines(A, b, i, iPivo);
         }
 
         double aii = A[i][i];
         for (int k = i + 1; k < n; k++) {
             double aki = A[k][i];
             for (int j = 0; j < n; j++) {
-                A[k][j] = A[k][j] * aii - A[i][j] * aki;  // eqk = eqk*Aii - eqi*Aki
+                A[k][j] = A[k][j] * aii - A[i][j] * aki;
             }
-            b[k] = b[k] * aii - b[i] * aki;  // bk = bk*Aii - bi*Aki
+            b[k] = b[k] * aii - b[i] * aki;
         }
     }
 }
 
-void initializeArrays(double ***A, double **b, double **x, int *n) {
+void initSystem(double ***A, double ***Acpy, double **b, double **bcpy, double **x, int *n) {
     scanf("%d", n);
 
-    *A = (double **)malloc((*n) * sizeof(double *));
-    for (int i = 0; i < *n; i++) {
-        (*A)[i] = (double *)malloc((*n) * sizeof(double));
-    }
+    mallocMatrix(A, *n);
+    mallocMatrix(Acpy, *n);
     *b = (double *)malloc((*n) * sizeof(double));
+    *bcpy = (double *)malloc((*n) * sizeof(double));
     *x = (double *)malloc((*n) * sizeof(double));
 
     for (int i = 0; i < *n; i++) {
@@ -116,6 +139,8 @@ void initializeArrays(double ***A, double **b, double **x, int *n) {
         }
         scanf("%lf", &(*b)[i]);
     }
+
+    copySystem(*A, Acpy, *b, bcpy, *n);
 }
 
 void printInputs(double **A, double *b, int n) {
@@ -145,17 +170,34 @@ int main(int argc, char *argv[]) {
 
     // LIKWID_MARKER_CLOSE;
 
-    double **A = NULL, *b = NULL, *x = NULL;
+    double **A = NULL, **Acpy = NULL, *b = NULL, *bcpy = NULL, *x = NULL;
     int n;
 
-    initializeArrays(&A, &b, &x, &n);
-    printf("Step 1:\n");
-    printInputs(A, b, n);
-    eliminacaoGaussSemPivoteamento(A, b, n);
-    printf("Step 2:\n");
-    printInputs(A, b, n);
-    retrossubs(A, b, x, n);
+    initSystem(&A, &Acpy, &b, &bcpy, &x, &n);
+
+    gaussElimAlt(A, b, n);
+    backSubstitution(A, b, x, n);
     printResults(x, n);
+
+    copySystem(Acpy, &A, bcpy, &b, n);
+    gaussElimPivot(A, b, n);
+    backSubstitution(A, b, x, n);
+    printResults(x, n);
+
+    copySystem(Acpy, &A, bcpy, &b, n);
+    gaussElimPivotNoMult(A, b, n);
+    backSubstitution(A, b, x, n);
+    printResults(x, n);
+
+    freeMatrix(&A, n);
+    freeMatrix(&Acpy, n);
+    free(b);
+    free(x);
 
     return 0;
 }
+/*
+ * Cópia das matrizes
+ * Resíduos
+ * Script likwid
+ */
