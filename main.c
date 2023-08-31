@@ -28,6 +28,24 @@ void eliminacaoGauss(double **A, double *b, int n) {
     }
 }
 
+void eliminacaoGaussSemPivoteamento(double **A, double *b, int n) {
+    for (int i = 0; i < n; i++) {
+        double aii = A[i][i];
+        for (int j = 0; j < n; j++) {
+            A[i][j] /= aii;
+        }
+        b[i] /= aii;
+
+        for (int k = i + 1; k < n; k++) {
+            for (int j = i + 1; j < n; j++) {
+                A[k][j] -= A[k][i] * A[i][j];
+            }
+            b[k] -= A[k][i] * b[i];
+            A[k][i] = 0;
+        }
+    }
+}
+
 int encontraMax(double **A, int i, int n) {
     int max = i;
     for (int j = i + 1; j < n; j++) {
@@ -60,6 +78,24 @@ void eliminacaoGaussPivoteamento(double **A, double *b, int n) {
                 A[k][j] -= m * A[i][j];
             }
             b[k] -= m * b[i];
+        }
+    }
+}
+
+void eliminacaoGaussSemMultiplicador(double **A, double *b, int n) {
+    for (int i = 0; i < n; i++) {
+        int iPivo = encontraMax(A, i, n);
+        if (iPivo != i) {
+            trocaLinha(A, b, i, iPivo);
+        }
+
+        double aii = A[i][i];
+        for (int k = i + 1; k < n; k++) {
+            double aki = A[k][i];
+            for (int j = 0; j < n; j++) {
+                A[k][j] = A[k][j] * aii - A[i][j] * aki;  // eqk = eqk*Aii - eqi*Aki
+            }
+            b[k] = b[k] * aii - b[i] * aki;  // bk = bk*Aii - bi*Aki
         }
     }
 }
@@ -115,7 +151,7 @@ int main(int argc, char *argv[]) {
     initializeArrays(&A, &b, &x, &n);
     printf("Step 1:\n");
     printInputs(A, b, n);
-    eliminacaoGauss(A, b, n);
+    eliminacaoGaussSemPivoteamento(A, b, n);
     printf("Step 2:\n");
     printInputs(A, b, n);
     retrossubs(A, b, x, n);
