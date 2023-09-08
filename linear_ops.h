@@ -94,6 +94,17 @@ void gaussElimPivot(double **A, double *b, int n);
 void gaussElimPivotNoMult(double **A, double *b, int n);
 
 /**
+ * Calculates the residue for each equation according to the vector x of solutions
+ * @param A pointer to the matrix A of coefficients
+ * @param b pointer to the vector b of independent terms
+ * @param x pointer to the vector x of solutions
+ * @param r pointer to the vector r of residue
+ * @param n size of the system
+ * 
+*/
+void calcResidue(double **A, double *b, double *x, double *r, int n);
+
+/**
  * Initializes a linear system consisting of a matrix A with coefficients and a vector b with independent terms (and a copy of each)
  * and a vector x of solutions, allocating memory for them and filling them with user input (except for the vector x)
  * @param A pointer to the matrix A of coefficients
@@ -101,10 +112,11 @@ void gaussElimPivotNoMult(double **A, double *b, int n);
  * @param b pointer to the vector b of independent terms
  * @param bcpy pointer to the vector b of independent terms (copy)
  * @param x pointer to the vector x of solutions
+ * @param r pointer to the vector r of residue
  * @param n size of the system
  * @return void
 */
-void initSystem(double ***A, double ***Acpy, double **b, double **bcpy, double **x, int *n);
+void initSystem(double ***A, double ***Acpy, double **b, double **bcpy, double **x, double **r, int *n);
 
 /**
  * Prints the linear system consisting of a matrix A with coefficients and a vector b with independent terms
@@ -116,11 +128,13 @@ void initSystem(double ***A, double ***Acpy, double **b, double **bcpy, double *
 void printInputs(double **A, double *b, int n);
 
 /**
- * Prints the results of the linear system from a vector x of solutions
+ * Prints the results of the linear system from a vector x of solutions and the residue obtained for each equation from a vector r of
+ * residue
  * @param x pointer to the vector x of solutions
+ * @param r pointer to the vector r of residue
  * @param n size of the system
  * @return void
 */
-void printResults(double *x, int n);
+void printResults(double *x, double *r, int n);
 
 #endif

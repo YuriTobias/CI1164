@@ -122,7 +122,16 @@ void gaussElimPivotNoMult(double **A, double *b, int n) {
     }
 }
 
-void initSystem(double ***A, double ***Acpy, double **b, double **bcpy, double **x, int *n) {
+void calcResidue(double **A, double *b, double *x, double *r, int n) {
+    for (int i = 0; i < n; i++) {
+        r[i] = b[i] * -1;
+        for (int j = 0; j < n; j++) {
+            r[i] += A[i][j] * x[j];
+        }
+    }
+}
+
+void initSystem(double ***A, double ***Acpy, double **b, double **bcpy, double **x, double **r, int *n) {
     scanf("%d", n);
 
     mallocMatrix(A, *n);
@@ -130,6 +139,7 @@ void initSystem(double ***A, double ***Acpy, double **b, double **bcpy, double *
     *b = (double *)malloc((*n) * sizeof(double));
     *bcpy = (double *)malloc((*n) * sizeof(double));
     *x = (double *)malloc((*n) * sizeof(double));
+    *r = (double *)malloc((*n) * sizeof(double));
 
     for (int i = 0; i < *n; i++) {
         for (int j = 0; j < *n; j++) {
@@ -151,10 +161,15 @@ void printInputs(double **A, double *b, int n) {
     }
 }
 
-void printResults(double *x, int n) {
+void printResults(double *x, double *r, int n) {
     printf("X=[");
     for (int i = 0; i < n; i++) {
         printf("%lf%c", x[i], i == n - 1 ? ']' : ' ');
+    }
+    printf("\n");
+    printf("R=[");
+    for (int i = 0; i < n; i++) {
+        printf("%lf%c", r[i], i == n - 1 ? ']' : ' ');
     }
     printf("\n");
 }
