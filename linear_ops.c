@@ -161,7 +161,7 @@ void printInputs(double **A, double *b, int n) {
     }
 }
 
-void printResults(double *x, double *r, int n) {
+void printResults(double *x, double *r, double t, int n) {
     printf("X=[");
     for (int i = 0; i < n; i++) {
         printf("%lf%c", x[i], i == n - 1 ? ']' : ' ');
@@ -171,5 +171,5 @@ void printResults(double *x, double *r, int n) {
     for (int i = 0; i < n; i++) {
         printf("%lf%c", r[i], i == n - 1 ? ']' : ' ');
     }
-    printf("\n");
+    printf("\nAVERAGE TIME: %lf ms\n", t);
 }

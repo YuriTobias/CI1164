@@ -1,6 +1,6 @@
 CFLAGS = -lm -Wall -g
 CC = gcc
-objects = main.o linear_ops.o
+objects = main.o linear_ops.o utils.o
 
 all: perfEG
 
@@ -12,6 +12,9 @@ main.o: main.c
 
 linear_ops.o: linear_ops.c linear_ops.h
 	$(CC) -c linear_ops.c $(CFLAGS)
+
+utils.o: utils.c
+	$(CC) -c utils.c $(CFLAGS)
 
 clean:
 	-rm -f $(objects)

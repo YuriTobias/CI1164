@@ -132,9 +132,10 @@ void printInputs(double **A, double *b, int n);
  * residue
  * @param x pointer to the vector x of solutions
  * @param r pointer to the vector r of residue
+ * @param t average solution calculation time
  * @param n size of the system
  * @return void
 */
-void printResults(double *x, double *r, int n);
+void printResults(double *x, double *r, double t, int n);
 
 #endif
