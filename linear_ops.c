@@ -131,8 +131,9 @@ void calcResidue(double **A, double *b, double *x, double *r, int n) {
     }
 }
 
-void initSystem(double ***A, double ***Acpy, double **b, double **bcpy, double **x, double **r, int *n) {
-    scanf("%d", n);
+int initSystem(double ***A, double ***Acpy, double **b, double **bcpy, double **x, double **r, int *n) {
+    int res;
+    res = scanf("%d", n);
 
     mallocMatrix(A, *n);
     mallocMatrix(Acpy, *n);
@@ -143,12 +144,14 @@ void initSystem(double ***A, double ***Acpy, double **b, double **bcpy, double *
 
     for (int i = 0; i < *n; i++) {
         for (int j = 0; j < *n; j++) {
-            scanf("%lf", &(*A)[i][j]);
+            res = scanf("%lf", &(*A)[i][j]);
         }
-        scanf("%lf", &(*b)[i]);
+        res = scanf("%lf", &(*b)[i]);
     }
 
     copySystem(*A, Acpy, *b, bcpy, *n);
+
+    return res;
 }
 
 void printInputs(double **A, double *b, int n) {

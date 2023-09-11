@@ -114,9 +114,9 @@ void calcResidue(double **A, double *b, double *x, double *r, int n);
  * @param x pointer to the vector x of solutions
  * @param r pointer to the vector r of residue
  * @param n size of the system
- * @return void
+ * @return number of sucessful values read
 */
-void initSystem(double ***A, double ***Acpy, double **b, double **bcpy, double **x, double **r, int *n);
+int initSystem(double ***A, double ***Acpy, double **b, double **bcpy, double **x, double **r, int *n);
 
 /**
  * Prints the linear system consisting of a matrix A with coefficients and a vector b with independent terms

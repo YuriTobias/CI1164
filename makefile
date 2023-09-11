@@ -1,31 +1,43 @@
-CFLAGS = -lm -Wall -g
+LIKWID_HOME = /usr/local
+CFLAGS = -lm -Wall -g -I$(LIKWID_HOME)/include -DLIKWID_PERFMON -O3 -mavx -march=native
+LFLAGS = -L$(LIKWID_HOME)/lib -llikwid
 CC = gcc
+
+# Lista de objetos
 objects = main.o linear_ops.o utils.o
 
-all: perfEG
+# Nome do executável
+EXECUTABLE = perfEG
 
-perfEG: $(objects)
-	$(CC) $(objects) -o perfEG $(CFLAGS)
+all: $(EXECUTABLE)
 
+$(EXECUTABLE): $(objects)
+	$(CC) $(objects) $(CFLAGS) -o $(EXECUTABLE) $(LFLAGS)
+
+# Regra de compilação para main.c
 main.o: main.c
-	$(CC) -c main.c $(CFLAGS)
+	$(CC) -c $< $(CFLAGS)
 
+# Regra de compilação para linear_ops.c
 linear_ops.o: linear_ops.c linear_ops.h
-	$(CC) -c linear_ops.c $(CFLAGS)
+	$(CC) -c $< $(CFLAGS)
 
+# Regra de compilação para utils.c
 utils.o: utils.c
-	$(CC) -c utils.c $(CFLAGS)
+	$(CC) -c $< $(CFLAGS)
 
 clean:
-	-rm -f $(objects)
+	rm -f $(objects) $(EXECUTABLE)
 
 purge: clean
-	-rm -f perfEG
 
 clear:
 	clear
 
-exec: perfEG
-	./perfEG
+exec: $(EXECUTABLE)
+	./$(EXECUTABLE)
+
+script: script.sh
+	./script.sh
 
 rebuild: purge all clear exec
