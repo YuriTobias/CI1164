@@ -31,7 +31,6 @@ double lagrangeInterpolation(double x, double **points, int n) {
     double res = 0, divisor, dividend = 1;
 
     for (int i = 0; i < n; i++) {
-        printf("%lf *= (%lf - %lf)\n", dividend, x, points[i][0]);
         dividend *= (x - points[i][0]);
     }
 
