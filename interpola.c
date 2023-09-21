@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 #include "interpolation_ops.h"
-// #include "likwid.h"
+#include "likwid.h"
 #include "utils.h"
 
 #define N 10000
@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
     // Calculate interpolation through Newton method
     tNewton = timestamp();
     LIKWID_MARKER_START("newton");
-    // printf("%lf\n", newtonInterpolation(atof(argv[1]), A, n));
+    printf("%lf\n", newtonInterpolation(atof(argv[1]), A, n));
     LIKWID_MARKER_STOP("newton");
     tNewton = timestamp() - tNewton;
     // Print the time taken by each method

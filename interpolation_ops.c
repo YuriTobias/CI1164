@@ -48,10 +48,49 @@ double lagrangeInterpolation(double x, double **points, int n) {
     return res;
 }
 
+double newtonInterpolation(double x, double **points, int n) {
+    double res = 0, mult = 1;
+    double splitDifferences[n];
+
+    calcSplitDifferences(splitDifferences, points, n);
+
+    for(int i = 0; i < n; i++) {
+        res += mult * splitDifferences[i];
+        mult *= (x - points[i][0]);
+    }
+
+    return res;
+}
+
+void calcSplitDifferences(double *out, double **points, int n) {
+    int cont;
+    double splitDiffs[((n*n)+n)/2];
+
+    for(int i = 0; i < n; i++)
+        splitDiffs[i] = points[i][1];
+
+    cont = n;
+    for(int i = 1; i < n; i++) {
+        for(int j = i; j < n; j++) {
+            splitDiffs[cont] = (splitDiffs[(cont - n + i)] - splitDiffs[cont - n + i - 1]) / (points[j][0] - points[j - i][0]);
+            cont++;
+        }
+    }
+
+    cont = 0;
+    for(int i = 0; i < n; i++) {
+        out[i] = splitDiffs[cont];
+        cont += (n - i);
+    }
+}
+
 void initPoints(double ***A, int *n) {
-    scanf("%d", n);
+    if (scanf("%d", n) != 1) 
+        printf("Failed to read integer.\n");
+    
     mallocMatrix(A, *n, 2);
     for (int i = 0; i < *n; i++) {
-        scanf("%lf %lf", &(*A)[i][0], &(*A)[i][1]);
+        if(scanf("%lf %lf", &(*A)[i][0], &(*A)[i][1]) != 2)
+            printf("Failed to read matrix.\n");
     }
 }

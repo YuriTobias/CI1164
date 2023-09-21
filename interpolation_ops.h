@@ -48,6 +48,22 @@ void copySystem(double **srcA, double ***destA, double *srcB, double **destB, in
 double lagrangeInterpolation(double x, double **points, int n);
 
 /**
+ * Calculate an interpolation using the Newton method
+ * @param x value to be interpolated
+ * @param points matrix of points to serve as interpolation base
+ * @param n number of points in the matrix
+ * @return the interpolated value
+*/
+double newtonInterpolation(double x, double **points, int n);
+
+/**
+ * @param out vector with splitted differences
+ * @param points matrix of points to serve as interpolation base
+ * @param n number of points in the matrix
+*/
+void calcSplitDifferences(double *out, double **points, int n);
+
+/**
  * Initialize the points to be used in the interpolation
  * @param A pointer to the matrix A where the points will be stored
  * @param n pointer to the variable that will store the number of points
