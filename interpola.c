@@ -8,11 +8,11 @@
 #define N 10000
 
 int main(int argc, char *argv[]) {
-    LIKWID_MARKER_INIT;
     double **A, tLagrange, tNewton;
     int n;
     // Read the points from stdin
     initPoints(&A, &n, atof(argv[1]));
+    LIKWID_MARKER_INIT;
     // Calculate interpolation through Lagrange method
     tLagrange = timestamp();
     LIKWID_MARKER_START("lagrange");

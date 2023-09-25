@@ -85,8 +85,8 @@ void calcSplitDifferences(double *out, double **points, int n) {
 }
 
 void initPoints(double ***A, int *n, int x) {
-    int min = INFINITY;
-    int max = -INFINITY;
+    double min = INFINITY;
+    double max = -INFINITY;
     if (scanf("%d", n) != 1) printf("Failed to read integer.\n");
 
     mallocMatrix(A, *n, 2);
