@@ -15,7 +15,7 @@ void mallocMatrix(double ***matrix, int rows, int cols);
  * @param matrix pointer to the matrix
  * @param size size of the matrix
  * @return void
-*/
+ */
 void freeMatrix(double ***matrix, int size);
 
 /**
@@ -26,7 +26,7 @@ void freeMatrix(double ***matrix, int size);
  * @param destB pointer to the destination vector b of independent terms
  * @param size size of the system
  * @return void
-*/
+ */
 void copySystem(double **srcA, double ***destA, double *srcB, double **destB, int size);
 
 /**
@@ -36,7 +36,7 @@ void copySystem(double **srcA, double ***destA, double *srcB, double **destB, in
  * @param x pointer to the vector x of solutions
  * @param n size of the system
  * @return void
-*/
+ */
 
 /**
  * Calculate an interpolation using the Lagrange method
@@ -44,7 +44,7 @@ void copySystem(double **srcA, double ***destA, double *srcB, double **destB, in
  * @param points matrix of points to serve as interpolation base
  * @param n number of points in the matrix
  * @return the interpolated value
-*/
+ */
 double lagrangeInterpolation(double x, double **points, int n);
 
 /**
@@ -53,22 +53,23 @@ double lagrangeInterpolation(double x, double **points, int n);
  * @param points matrix of points to serve as interpolation base
  * @param n number of points in the matrix
  * @return the interpolated value
-*/
+ */
 double newtonInterpolation(double x, double **points, int n);
 
 /**
  * @param out vector with splitted differences
  * @param points matrix of points to serve as interpolation base
  * @param n number of points in the matrix
-*/
+ */
 void calcSplitDifferences(double *out, double **points, int n);
 
 /**
  * Initialize the points to be used in the interpolation
  * @param A pointer to the matrix A where the points will be stored
  * @param n pointer to the variable that will store the number of points
+ * @param x value to be interpolated (only to check if it is in the range of the points)
  * @return void
-*/
-void initPoints(double ***A, int *n);
+ */
+void initPoints(double ***A, int *n, int x);
 
 #endif

@@ -12,7 +12,7 @@ int main(int argc, char *argv[]) {
     double **A, tLagrange, tNewton;
     int n;
     // Read the points from stdin
-    initPoints(&A, &n);
+    initPoints(&A, &n, atof(argv[1]));
     // Calculate interpolation through Lagrange method
     tLagrange = timestamp();
     LIKWID_MARKER_START("lagrange");
