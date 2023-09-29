@@ -3,13 +3,18 @@
 
 enum OPERATIONS { SUM, SUB, MULT, DIV };
 
+typedef struct {
+    double min;
+    double max;
+} Interval_t;
+
 float minf(float a, float b, float c, float d);
 
 float maxf(float a, float b, float c, float d);
 
-void calcInterval(double number, double *interval);
+void calcInterval(double number, Interval_t *interval);
 
-void calcIntervalOperation(double *operandA, double *operandB, enum OPERATIONS operation, double *result);
+void calcIntervalOperation(Interval_t *operandA, Interval_t *operandB, enum OPERATIONS operation, Interval_t *result);
 
 void mallocMatrix(double ***matrix, int rows, int cols);
 
