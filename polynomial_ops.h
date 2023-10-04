@@ -8,6 +8,11 @@ typedef struct {
 
 enum OPERATIONS { SUM, SUB, MULT, DIV, POW };
 
+typedef struct {
+    double min;
+    double max;
+} Interval_t;
+
 float minf(float a, float b, float c, float d);
 
 float maxf4(float a, float b, float c, float d);
