@@ -6,7 +6,12 @@
 
 int main(int argc, char *argv[]) {
     fesetround(FE_DOWNWARD);
-    double **points;
+    Interval_t **points, **coeffs, *terms, *powers;
     int n, k;
-    perfSquare(&points, &n, &k);
+    perfSquare(&points, &powers, &coeffs, &terms, &n, &k);
+    freeIntervalMatrix(&points, n);
+    freeIntervalMatrix(&coeffs, k + 1);
+    free(powers);
+    free(terms);
+    return 0;
 }
