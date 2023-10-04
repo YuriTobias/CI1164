@@ -1,11 +1,6 @@
 #ifndef POLYNOMIAL_OPS_H
 #define POLYNOMIAL_OPS_H
 
-typedef struct {
-    double min;
-    double max;
-} Interval_t;
-
 enum OPERATIONS { SUM, SUB, MULT, DIV, POW };
 
 typedef struct {

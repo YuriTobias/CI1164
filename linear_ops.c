@@ -2,15 +2,32 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
-int findPivotLine(Interval_t **A, int i, int n) {
-    int max = i;
-    for (int j = i + 1; j < n; j++) {
-        if (((A[j][i].max + A[j][i].min) / 2) > ((A[max][i].max + A[max][i].min) / 2)) {
-            max = j;
+void copyMatrixInterval(Interval_t **A, Interval_t ***B, int n) {
+    mallocIntervalMatrix(B, n, n);
+    for(int i = 0; i < n; i++) {
+        for(int j = 0; j < n; j++) {
+            (*B)[i][j] = A[i][j];
         }
     }
-    return max;
+}
+
+void copyVectorInterval(Interval_t *A, Interval_t **B, int n) {
+    *B = (Interval_t *)malloc((n) * sizeof(Interval_t));
+    for(int i = 0; i < n; i++) {
+        (*B)[i] = A[i];
+    }
+}
+
+int findPivotLine(Interval_t **A, int i, int n) {
+    int bigger = i;
+    for (int j = i + 1; j < n; j++) {
+        if (((A[j][i].max + A[j][i].min) / 2) > ((A[bigger][i].max + A[bigger][i].min) / 2)) {
+            bigger = j;
+        }
+    }
+    return bigger;
 }
 
 void swapSystemLines(Interval_t **A, Interval_t *b, int i, int iPivo) {
@@ -22,20 +39,28 @@ void swapSystemLines(Interval_t **A, Interval_t *b, int i, int iPivo) {
     b[iPivo] = auxB;
 }
 
-void gaussElimPivot(Interval_t **A, Interval_t **b, int n) {
+void gaussElimPivot(Interval_t **A, Interval_t *b, int n) {
+    Interval_t m;
+    
     for (int i = 0; i < n; i++) {
         int iPivo = findPivotLine(A, i, n);
         if (iPivo != i) {
             swapSystemLines(A, b, i, iPivo);
         }
-        for (int k = i + 1; k < n; k++) {
-            double m = A[k][i] / A[i][i];
-            A[k][i] = 0;
-            for (int j = i + 1; j < n; j++) {
-                A[k][j] -= m * A[i][j];
-            }
-            b[k] -= m * *b[i];
-        }
+        // for (int k = i + 1; k < n; k++) {
+        //     m.min = A[k][i].min / A[i][i].max;
+        //     m.max = A[k][i].max / A[i][i].min;
+        //     if(A[i][i].min < 0 && A[i][i].max > 0) {
+        //         m.min = -INFINITY;
+        //         m.max = INFINITY;
+        //     }
+        //     A[k][i].min = 0;
+        //     A[k][i].max = 0;
+        //     for (int j = i + 1; j < n; j++) {
+        //         A[k][j] -= m * A[i][j];
+        //     }
+        //     b[k] -= m * *b[i];
+        // }
     }
 }
 

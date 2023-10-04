@@ -3,6 +3,10 @@
 
 #include "polynomial_ops.h"
 
+void copyMatrixInterval(Interval_t **A, Interval_t ***B, int n);
+
+void copyVectorInterval(Interval_t *A, Interval_t **B, int n);
+
 /**
  * Iterates through the lines above the pivot line to find the line with the biggest pivot
  * @param A pointer to the matrix A of coefficients
@@ -29,7 +33,7 @@ void swapSystemLines(Interval_t **A, Interval_t *b, int i, int iPivo);
  * @param n size of the system
  * @return void
 */
-void gaussElimPivot(Interval_t **A, Interval_t **b, int n);
+void gaussElimPivot(Interval_t **A, Interval_t *b, int n);
 
 /**
  * Performs the back substitution method to solve a linear system and stores the solution in a vector x
