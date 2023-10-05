@@ -4,6 +4,26 @@
 #include <stdlib.h>
 #include <math.h>
 
+Interval_t multInterval(Interval_t A, Interval_t B) {
+    Interval_t aux;
+    aux.min = A.min * B.min;
+    if((A.min * B.max) < aux.min)
+        aux.min = A.min * B.max;
+    if((A.max * B.min) < aux.min)
+        aux.min = A.max * B.min;
+    if((A.max * B.max) < aux.min)
+        aux.min = A.max * B.max;
+    aux.max = A.min * B.min;
+    if((A.min * B.max) > aux.max)
+        aux.max = A.min * B.max;
+    if((A.max * B.min) > aux.max)
+        aux.max = A.max * B.min;
+    if((A.max * B.max) > aux.max)
+        aux.max = A.max * B.max;
+
+    return aux;
+}
+
 void copyMatrixInterval(Interval_t **A, Interval_t ***B, int n) {
     mallocIntervalMatrix(B, n, n);
     for(int i = 0; i < n; i++) {
@@ -47,30 +67,39 @@ void gaussElimPivot(Interval_t **A, Interval_t *b, int n) {
         if (iPivo != i) {
             swapSystemLines(A, b, i, iPivo);
         }
-        // for (int k = i + 1; k < n; k++) {
-        //     m.min = A[k][i].min / A[i][i].max;
-        //     m.max = A[k][i].max / A[i][i].min;
-        //     if(A[i][i].min < 0 && A[i][i].max > 0) {
-        //         m.min = -INFINITY;
-        //         m.max = INFINITY;
-        //     }
-        //     A[k][i].min = 0;
-        //     A[k][i].max = 0;
-        //     for (int j = i + 1; j < n; j++) {
-        //         A[k][j] -= m * A[i][j];
-        //     }
-        //     b[k] -= m * *b[i];
-        // }
+        for (int k = i + 1; k < n; k++) {
+            m.min = A[k][i].min / A[i][i].max;
+            m.max = A[k][i].max / A[i][i].min;
+            if(A[i][i].min < 0 && A[i][i].max > 0) {
+                m.min = -INFINITY;
+                m.max = INFINITY;
+            }
+            A[k][i].min = 0;
+            A[k][i].max = 0;
+            for (int j = i + 1; j < n; j++) {
+                A[k][j].min -= multInterval(m, A[i][j]).max;
+                A[k][j].max -= multInterval(m, A[i][j]).min;
+            }
+            b[k].min -= multInterval(m, b[i]).max;
+            b[k].max -= multInterval(m, b[i]).min;
+        }
     }
 }
 
-void backSubstitution(double **A, double *b, double *x, int n) {
+void backSubstitution(Interval_t **A, Interval_t *b, Interval_t **x, int n) {
+    *x = (Interval_t *)malloc((n) * sizeof(Interval_t));
     for (int i = n - 1; i >= 0; i--) {
-        x[i] = b[i];
+        (*x)[i] = b[i];
         for (int j = i + 1; j < n; j++) {
-            x[i] -= A[i][j] * x[j];
+            (*x)[i].min -= multInterval(A[i][j], (*x)[j]).max;
+            (*x)[i].max -= multInterval(A[i][j], (*x)[j]).min;
         }
-        x[i] /= A[i][i];
+        (*x)[i].min /= A[i][i].max;
+        (*x)[i].max /= A[i][i].min;
+        if(A[i][i].min < 0 && A[i][i].max > 0) {
+            (*x)[i].min = -INFINITY;
+            (*x)[i].max = INFINITY;
+        }
     }
 }
 

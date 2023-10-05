@@ -3,6 +3,8 @@
 
 #include "polynomial_ops.h"
 
+Interval_t multInterval(Interval_t A, Interval_t B);
+
 void copyMatrixInterval(Interval_t **A, Interval_t ***B, int n);
 
 void copyVectorInterval(Interval_t *A, Interval_t **B, int n);
@@ -43,7 +45,7 @@ void gaussElimPivot(Interval_t **A, Interval_t *b, int n);
  * @param n size of the system
  * @return void
 */
-void backSubstitution(double **A, double *b, double *x, int n);
+void backSubstitution(Interval_t **A, Interval_t *b, Interval_t **x, int n);
 
 /**
  * Calculates the residue for each equation according to the vector x of solutions
