@@ -117,11 +117,14 @@ void backSubstitution(Interval_t **A, Interval_t *b, Interval_t **x, int n) {
     }
 }
 
-void calcResidue(double **A, double *b, double *x, double *r, int n) {
+void calcResidue(Interval_t **A, Interval_t *b, Interval_t *x, Interval_t **r, int n) {
+    *r = (Interval_t *)malloc((n) * sizeof(Interval_t));
     for (int i = 0; i < n; i++) {
-        r[i] = b[i] * -1;
+        (*r)[i].min = b[i].min * -1;
+        (*r)[i].max = b[i].max * -1;
         for (int j = 0; j < n; j++) {
-            r[i] += A[i][j] * x[j];
+            (*r)[i].min += multInterval(A[i][j], x[j]).min;
+            (*r)[i].max += multInterval(A[i][j], x[j]).max;
         }
     }
 }

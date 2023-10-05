@@ -58,7 +58,7 @@ void backSubstitution(Interval_t **A, Interval_t *b, Interval_t **x, int n);
  * @param n size of the system
  * 
 */
-void calcResidue(double **A, double *b, double *x, double *r, int n);
+void calcResidue(Interval_t **A, Interval_t *b, Interval_t *x, Interval_t **r, int n);
 
 /**
  * Prints the linear system consisting of a matrix A with coefficients and a vector b with independent terms
