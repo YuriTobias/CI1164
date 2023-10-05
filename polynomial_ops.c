@@ -169,6 +169,6 @@ void perfSquare(Interval_t ***points, Interval_t **powers, Interval_t ***coeffs,
         }
     }
 
-    printSystem(*coeffs, *terms, *n + 1);
+    // printSystem(*coeffs, *terms, *n + 1);
     free(aux);
 }

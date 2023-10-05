@@ -24,6 +24,30 @@ Interval_t multInterval(Interval_t A, Interval_t B) {
     return aux;
 }
 
+Interval_t divInterval(Interval_t A, Interval_t B) {
+    Interval_t aux;
+    aux.min = A.min / B.max;    // a / d
+    if((A.min / B.min) < aux.min)   // a / c
+        aux.min = A.min / B.min;
+    if((A.max / B.max) < aux.min)   // b / d
+        aux.min = A.max / B.max;
+    if((A.max / B.min) < aux.min)   // b / c
+        aux.min = A.max / B.min;
+    aux.max = A.min / B.max;    // a / d
+    if((A.min / B.min) > aux.max)   // a / c
+        aux.max = A.min / B.min;
+    if((A.max / B.max) > aux.max)   // b / d
+        aux.max = A.max / B.max;
+    if((A.max / B.min) > aux.max)   // b / c
+        aux.max = A.max / B.min;
+    if((B.min < 0) & (B.max > 0)) {
+        aux.min = -INFINITY;
+        aux.max = INFINITY;
+    }
+
+    return aux;
+}
+
 void copyMatrixInterval(Interval_t **A, Interval_t ***B, int n) {
     mallocIntervalMatrix(B, n, n);
     for(int i = 0; i < n; i++) {
@@ -68,12 +92,7 @@ void gaussElimPivot(Interval_t **A, Interval_t *b, int n) {
             swapSystemLines(A, b, i, iPivo);
         }
         for (int k = i + 1; k < n; k++) {
-            m.min = A[k][i].min / A[i][i].max;
-            m.max = A[k][i].max / A[i][i].min;
-            if(A[i][i].min < 0 && A[i][i].max > 0) {
-                m.min = -INFINITY;
-                m.max = INFINITY;
-            }
+            m = divInterval(A[k][i], A[i][i]);
             A[k][i].min = 0;
             A[k][i].max = 0;
             for (int j = i + 1; j < n; j++) {
@@ -94,12 +113,7 @@ void backSubstitution(Interval_t **A, Interval_t *b, Interval_t **x, int n) {
             (*x)[i].min -= multInterval(A[i][j], (*x)[j]).max;
             (*x)[i].max -= multInterval(A[i][j], (*x)[j]).min;
         }
-        (*x)[i].min /= A[i][i].max;
-        (*x)[i].max /= A[i][i].min;
-        if(A[i][i].min < 0 && A[i][i].max > 0) {
-            (*x)[i].min = -INFINITY;
-            (*x)[i].max = INFINITY;
-        }
+        (*x)[i] = divInterval((*x)[i], A[i][i]);
     }
 }
 
