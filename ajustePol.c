@@ -8,21 +8,26 @@
 #include "polynomial_ops.h"
 
 int main(int argc, char *argv[]) {
+    LIKWID_MARKER_INIT;
     fesetround(FE_DOWNWARD);
+
     Interval_t **points, **coeffs, **cpycoeffs, *terms, *cpyterms, *powers, *alphas, *residues;
     int n, k;
     double tgeraSL, tsolSL;
-
+    LIKWID_MARKER_START("tgeraSL");
     tgeraSL = timestamp();
     perfSquare(&points, &powers, &coeffs, &terms, &k, &n);
     tgeraSL = timestamp() - tgeraSL;
+    LIKWID_MARKER_STOP("tgeraSL");
 
     copyMatrixInterval(coeffs, &cpycoeffs, n + 1);
     copyVectorInterval(terms, &cpyterms, n + 1);
+    LIKWID_MARKER_START("tsolSL");
     tsolSL = timestamp();
     gaussElimPivot(cpycoeffs, cpyterms, n + 1);
     backSubstitution(cpycoeffs, cpyterms, &alphas, n + 1);
     tsolSL = timestamp() - tsolSL;
+    LIKWID_MARKER_STOP("tsolSL");
     
     calcResidue(coeffs, terms, alphas, &residues, n + 1);
     
@@ -45,5 +50,7 @@ int main(int argc, char *argv[]) {
     free(cpyterms);
     free(powers);
     free(terms);
+
+    LIKWID_MARKER_CLOSE;
     return 0;
 }

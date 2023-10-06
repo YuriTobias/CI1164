@@ -1,34 +1,42 @@
-CFLAGS = -lm -Wall -g
+LIKWID_HOME = /usr/local
+CFLAGS = -lm -Wall -g -I$(LIKWID_HOME)/include -DLIKWID_PERFMON -O3 -mavx -march=native
+LFLAGS = -L$(LIKWID_HOME)/lib -llikwid
 CC = gcc
+
 objects = ajustePol.o polynomial_ops.o linear_ops.o utils.o
 
-all: ajustePol
+EXECUTABLE = ajustePol
 
-ajustePol: $(objects)
-	$(CC) $(objects) -o ajustePol $(CFLAGS)
+all: $(EXECUTABLE)
+
+$(EXECUTABLE): $(objects)
+	$(CC) $(objects) $(CFLAGS) -o $(EXECUTABLE) $(LFLAGS)
 
 ajustePol.o: ajustePol.c polynomial_ops.h
-	$(CC) -c ajustePol.c $(CFLAGS)
+	$(CC) -c $< $(CFLAGS)
 
 polynomial_ops.o: polynomial_ops.c polynomial_ops.h
-	$(CC) -c polynomial_ops.c $(CFLAGS)
+	$(CC) -c $< $(CFLAGS)
 
 linear_ops.o: linear_ops.c linear_ops.h
-	$(CC) -c linear_ops.c $(CFLAGS)
+	$(CC) -c $< $(CFLAGS)
 
 utils.o: utils.c utils.h
-	$(CC) -c utils.c $(CFLAGS)
+	$(CC) -c $< $(CFLAGS)
 
 clean:
-	-rm -f $(objects)
+	-rm -f $(objects) 
 
 purge: clean
-	-rm -f ajustePol
+	-rm -f $(EXECUTABLE)
 
 clear:
 	clear
 
-exec: ajustePol
-	./ajustePol
+exec: $(EXECUTABLE)
+	./$(EXECUTABLE)
+
+script: script.sh
+	./script.sh
 
 rebuild: purge all clear exec

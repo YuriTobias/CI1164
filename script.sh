@@ -11,7 +11,7 @@ xe="$1"
 input="$2"
 
 #filtra a saída para exibir somente os valores esperados
-likwid-perfctr -C ${CPU} -g $METRICA -m ./interpola $xe > output.txt
+likwid-perfctr -C ${CPU} -g $METRICA -m ./ajustePol $xe > output.txt
 sed -n '6,9p;/DP \[MFLOP\/s\] /p' output.txt | grep -v "AVX DP \[MFLOP/s\]"
 
 rm -f output.txt
