@@ -84,7 +84,7 @@ void swapSystemLines(Interval_t **A, Interval_t *b, int i, int iPivo) {
 }
 
 void gaussElimPivot(Interval_t **A, Interval_t *b, int n) {
-    Interval_t m;
+    Interval_t m, result;
     
     for (int i = 0; i < n; i++) {
         int iPivo = findPivotLine(A, i, n);
@@ -92,28 +92,40 @@ void gaussElimPivot(Interval_t **A, Interval_t *b, int n) {
             swapSystemLines(A, b, i, iPivo);
         }
         for (int k = i + 1; k < n; k++) {
-            m = divInterval(A[k][i], A[i][i]);
-            A[k][i].min = 0;
-            A[k][i].max = 0;
+            // m = divInterval(A[k][i], A[i][i]);
+            calcIntervalOperation(&(A)[k][i], &(A)[i][i], 0, DIV, &result);
+            m = result;
+            calcInterval(0, &(A)[k][i]);
+            // A[k][i].min = 0;
+            // A[k][i].max = 0;
             for (int j = i + 1; j < n; j++) {
-                A[k][j].min -= multInterval(m, A[i][j]).max;
-                A[k][j].max -= multInterval(m, A[i][j]).min;
+                calcIntervalOperation(&m, &(A)[i][j], 0, MULT, &result);
+                calcIntervalOperation(&(A)[k][j], &result, 0, SUB, &(A)[k][j]);
+                //[k][j].min -= multInterval(m, A[i][j]).max;
+                //A[k][j].max -= multInterval(m, A[i][j]).min;
             }
-            b[k].min -= multInterval(m, b[i]).max;
-            b[k].max -= multInterval(m, b[i]).min;
+            calcIntervalOperation(&m, &(b)[i], 0, MULT, &result);
+            calcIntervalOperation(&(b)[k], &result, 0, SUB, &(b)[k]);
+            //b[k].min -= multInterval(m, b[i]).max;
+            //b[k].max -= multInterval(m, b[i]).min;
         }
     }
 }
 
 void backSubstitution(Interval_t **A, Interval_t *b, Interval_t **x, int n) {
+    Interval_t result;
+    
     *x = (Interval_t *)malloc((n) * sizeof(Interval_t));
     for (int i = n - 1; i >= 0; i--) {
         (*x)[i] = b[i];
         for (int j = i + 1; j < n; j++) {
-            (*x)[i].min -= multInterval(A[i][j], (*x)[j]).max;
-            (*x)[i].max -= multInterval(A[i][j], (*x)[j]).min;
+            calcIntervalOperation(&(A)[i][j], &(*x)[j], 0, MULT, &result);
+            calcIntervalOperation(&(*x)[i], &result, 0, SUB, &(*x)[i]);
+            // (*x)[i].min -= multInterval(A[i][j], (*x)[j]).max;
+            // (*x)[i].max -= multInterval(A[i][j], (*x)[j]).min;
         }
-        (*x)[i] = divInterval((*x)[i], A[i][i]);
+        calcIntervalOperation(&(*x)[i], &(A)[i][i], 0, DIV, &(*x)[i]);
+        //(*x)[i] = divInterval((*x)[i], A[i][i]);
     }
 }
 

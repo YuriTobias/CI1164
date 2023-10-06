@@ -1,6 +1,6 @@
 CFLAGS = -lm -Wall -g
 CC = gcc
-objects = ajustePol.o polynomial_ops.o linear_ops.o
+objects = ajustePol.o polynomial_ops.o linear_ops.o utils.o
 
 all: ajustePol
 
@@ -15,6 +15,9 @@ polynomial_ops.o: polynomial_ops.c polynomial_ops.h
 
 linear_ops.o: linear_ops.c linear_ops.h
 	$(CC) -c linear_ops.c $(CFLAGS)
+
+utils.o: utils.c utils.h
+	$(CC) -c utils.c $(CFLAGS)
 
 clean:
 	-rm -f $(objects)
