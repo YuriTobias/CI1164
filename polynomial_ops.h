@@ -26,6 +26,8 @@ void freeMatrix(double ***matrix, int size);
 
 void printSystem(Interval_t **a, Interval_t *b, int n);
 
-void perfSquare(Interval_t ***points, Interval_t **powers, Interval_t ***coeffs, Interval_t **terms, int *n, int *k);
+void initInputs(Interval_t ***points, Interval_t **powers, Interval_t ***coeffs, Interval_t **terms, int *k, int *n);
+
+void perfSquare(Interval_t **points, Interval_t *powers, Interval_t **coeffs, Interval_t *terms, int n, int k);
 
 #endif  // POLYNOMIAL_OPS_H

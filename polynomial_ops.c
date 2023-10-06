@@ -127,9 +127,8 @@ void printPoints(Interval_t **points, int n) {
     }
 }
 
-void perfSquare(Interval_t ***points, Interval_t **powers, Interval_t ***coeffs, Interval_t **terms, int *k, int *n) {
+void initInputs(Interval_t ***points, Interval_t **powers, Interval_t ***coeffs, Interval_t **terms, int *k, int *n) {
     double inputAux;
-    Interval_t *aux = (Interval_t *)malloc(sizeof(Interval_t));
 
     scanf("%d", n);
     scanf("%d", k);
@@ -145,30 +144,33 @@ void perfSquare(Interval_t ***points, Interval_t **powers, Interval_t ***coeffs,
         scanf("%lf", &inputAux);
         calcInterval(inputAux, &(*points)[i][1]);
     }
+}
 
-    for (int i = 0; i <= *n + *n; i++) {
-        calcInterval(0, &(*powers)[i]);
-        for (int j = 0; j < *k; j++) {
-            calcIntervalOperation(&(*points)[j][0], NULL, i, POW, aux);        // points[j][0] ^ i
-            calcIntervalOperation(aux, &(*powers)[i], 0, SUM, &(*powers)[i]);  // powers[i] += points[j][0] ^ i
+void perfSquare(Interval_t **points, Interval_t *powers, Interval_t **coeffs, Interval_t *terms, int k, int n) {
+    Interval_t *aux = (Interval_t *)malloc(sizeof(Interval_t));
+
+    for (int i = 0; i <= n + n; i++) {
+        calcInterval(0, &(powers)[i]);
+        for (int j = 0; j < k; j++) {
+            calcIntervalOperation(&(points)[j][0], NULL, i, POW, aux);       // points[j][0] ^ i
+            calcIntervalOperation(aux, &(powers)[i], 0, SUM, &(powers)[i]);  // powers[i] += points[j][0] ^ i
         }
     }
 
-    for (int i = 0; i <= *n; i++) {
-        calcInterval(0, &(*terms)[i]);
-        for (int j = 0; j < *k; j++) {
-            calcIntervalOperation(&(*points)[j][0], NULL, i, POW, aux);      // points[j][0] ^ i
-            calcIntervalOperation(aux, &(*points)[j][1], 0, MULT, aux);      // points[j][0] ^ i * points[j][1]
-            calcIntervalOperation(aux, &(*terms)[i], 0, SUM, &(*terms)[i]);  // terms[i] += points[j][0] ^ i * points[j][1]
+    for (int i = 0; i <= n; i++) {
+        calcInterval(0, &(terms)[i]);
+        for (int j = 0; j < k; j++) {
+            calcIntervalOperation(&(points)[j][0], NULL, i, POW, aux);     // points[j][0] ^ i
+            calcIntervalOperation(aux, &(points)[j][1], 0, MULT, aux);     // points[j][0] ^ i * points[j][1]
+            calcIntervalOperation(aux, &(terms)[i], 0, SUM, &(terms)[i]);  // terms[i] += points[j][0] ^ i * points[j][1]
         }
     }
 
-    for (int i = 0; i <= *n; i++) {
-        for (int j = 0; j <= *n; j++) {
-            memcpy(&(*coeffs)[i][j], &(*powers)[i + j], sizeof(Interval_t));  // coeffs[i][j] = powers[i + j]
+    for (int i = 0; i <= n; i++) {
+        for (int j = 0; j <= n; j++) {
+            memcpy(&(coeffs)[i][j], &(powers)[i + j], sizeof(Interval_t));  // coeffs[i][j] = powers[i + j]
         }
     }
 
-    // printSystem(*coeffs, *terms, *n + 1);
     free(aux);
 }
