@@ -3,10 +3,6 @@
 
 #include "polynomial_ops.h"
 
-Interval_t multInterval(Interval_t A, Interval_t B);
-
-Interval_t divInterval(Interval_t A, Interval_t B);
-
 void copyMatrixInterval(Interval_t **A, Interval_t ***B, int n);
 
 void copyVectorInterval(Interval_t *A, Interval_t **B, int n);

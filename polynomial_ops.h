@@ -8,9 +8,11 @@ typedef struct {
     double max;
 } Interval_t;
 
-float minf(float a, float b, float c, float d);
+double minf(double a, double b, double c, double d);
 
-float maxf4(float a, float b, float c, float d);
+double maxf4(double a, double b, double c, double d);
+
+double maxf2(double a, double b);
 
 void calcInterval(double number, Interval_t *interval);
 

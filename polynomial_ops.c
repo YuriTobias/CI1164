@@ -5,23 +5,23 @@
 #include <stdlib.h>
 #include <string.h>
 
-float minf(float a, float b, float c, float d) {
-    float min = a;
+double minf(double a, double b, double c, double d) {
+    double min = a;
     if (b < min) min = b;
     if (c < min) min = c;
     if (d < min) min = d;
     return min;
 }
 
-float maxf4(float a, float b, float c, float d) {
-    float max = a;
+double maxf4(double a, double b, double c, double d) {
+    double max = a;
     if (b > max) max = b;
     if (c > max) max = c;
     if (d > max) max = d;
     return max;
 }
 
-float maxf2(float a, float b) { return a > b ? a : b; }
+double maxf2(double a, double b) { return a > b ? a : b; }
 
 void calcInterval(double number, Interval_t *interval) {
     if (number == 0) {
