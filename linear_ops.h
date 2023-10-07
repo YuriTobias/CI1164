@@ -13,7 +13,7 @@ void copyVectorInterval(Interval_t *A, Interval_t **B, int n);
  * @param i pivot line (also the pivot column)
  * @param n size of the system
  * @return index of the line with the biggest pivot
-*/
+ */
 int findPivotLine(Interval_t **A, int i, int n);
 
 /**
@@ -23,7 +23,7 @@ int findPivotLine(Interval_t **A, int i, int n);
  * @param i index of the first line
  * @param iPivo index of the second line
  * @return void
-*/
+ */
 void swapSystemLines(Interval_t **A, Interval_t *b, int i, int iPivo);
 
 /**
@@ -32,7 +32,7 @@ void swapSystemLines(Interval_t **A, Interval_t *b, int i, int iPivo);
  * @param b pointer to the vector b of independent terms
  * @param n size of the system
  * @return void
-*/
+ */
 void gaussElimPivot(Interval_t **A, Interval_t *b, int n);
 
 /**
@@ -42,7 +42,7 @@ void gaussElimPivot(Interval_t **A, Interval_t *b, int n);
  * @param x pointer to the vector x of solutions
  * @param n size of the system
  * @return void
-*/
+ */
 void backSubstitution(Interval_t **A, Interval_t *b, Interval_t **x, int n);
 
 /**
@@ -52,8 +52,8 @@ void backSubstitution(Interval_t **A, Interval_t *b, Interval_t **x, int n);
  * @param x pointer to the vector x of solutions
  * @param r pointer to the vector r of residue
  * @param n size of the system
- * 
-*/
+ *
+ */
 void calcResidue(Interval_t **A, Interval_t *b, Interval_t *x, Interval_t **r, int n);
 
 /**
@@ -62,8 +62,8 @@ void calcResidue(Interval_t **A, Interval_t *b, Interval_t *x, Interval_t **r, i
  * @param b pointer to the vector b of independent terms
  * @param n size of the system
  * @return void
-*/
-void printInputs(double **A, double *b, int n);
+ */
+void printInputs(Interval_t **A, Interval_t *b, int n);
 
 /**
  * Prints the results of the linear system from a vector x of solutions and the residue obtained for each equation from a vector r of
@@ -73,7 +73,7 @@ void printInputs(double **A, double *b, int n);
  * @param t average solution calculation time
  * @param n size of the system
  * @return void
-*/
+ */
 void printResults(double *x, double *r, double t, int n);
 
 #endif

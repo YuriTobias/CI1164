@@ -1,5 +1,6 @@
 #include "polynomial_ops.h"
 
+#include <fenv.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -23,14 +24,11 @@ double maxf4(double a, double b, double c, double d) {
 
 double maxf2(double a, double b) { return a > b ? a : b; }
 
-void calcInterval(double number, Interval_t *interval) {
-    if (number == 0) {
-        interval->min = 0;
-        interval->max = 0;
-    } else {
-        interval->min = number;
-        interval->max = nextafterf(number, INFINITY);
-    }
+void calcInterval(char *number, Interval_t *interval) {
+    fesetround(FE_DOWNWARD);
+    interval->min = atof(number);
+    fesetround(FE_UPWARD);
+    interval->max = atof(number);
 }
 
 void calcIntervalOperation(Interval_t *operandA, Interval_t *operandB, int exp, enum OPERATIONS operation, Interval_t *result) {
@@ -53,6 +51,11 @@ void calcIntervalOperation(Interval_t *operandA, Interval_t *operandB, int exp, 
             result->max = maxf4(copyA->min * copyB->min, copyA->min * copyB->max, copyA->max * copyB->min, copyA->max * copyB->max);
             break;
         case DIV:
+            if (copyB->min <= 0 && copyB->max >= 0) {
+                result->min = -INFINITY;
+                result->max = INFINITY;
+                break;
+            }
             result->min = minf(copyA->min / copyB->min, copyA->min / copyB->max, copyA->max / copyB->min, copyA->max / copyB->max);
             result->max = maxf4(copyA->min / copyB->min, copyA->min / copyB->max, copyA->max / copyB->min, copyA->max / copyB->max);
             break;
@@ -128,10 +131,15 @@ void printPoints(Interval_t **points, int n) {
 }
 
 void initInputs(Interval_t ***points, Interval_t **powers, Interval_t ***coeffs, Interval_t **terms, int *k, int *n) {
-    double inputAux;
+    char inputAux[100];
 
-    scanf("%d", n);
-    scanf("%d", k);
+    if (scanf("%d", n) == 0) {
+        exit(1);
+    }
+    if (scanf("%d", k) == 0) {
+        exit(1);
+    }
+    getchar();
 
     mallocIntervalMatrix(points, *k, 2);
     mallocIntervalMatrix(coeffs, *n + 1, *n + 1);
@@ -139,9 +147,13 @@ void initInputs(Interval_t ***points, Interval_t **powers, Interval_t ***coeffs,
     *terms = (Interval_t *)malloc((*n + 1) * sizeof(Interval_t));
 
     for (int i = 0; i < *k; i++) {
-        scanf("%lf", &inputAux);
+        if (fgets(inputAux, 100, stdin) == NULL) {
+            exit(1);
+        }
         calcInterval(inputAux, &(*points)[i][0]);
-        scanf("%lf", &inputAux);
+        if (fgets(inputAux, 100, stdin) == NULL) {
+            exit(1);
+        }
         calcInterval(inputAux, &(*points)[i][1]);
     }
 }
@@ -150,7 +162,7 @@ void perfSquare(Interval_t **points, Interval_t *powers, Interval_t **coeffs, In
     Interval_t *aux = (Interval_t *)malloc(sizeof(Interval_t));
 
     for (int i = 0; i <= n + n; i++) {
-        calcInterval(0, &(powers)[i]);
+        calcInterval("0", &(powers)[i]);
         for (int j = 0; j < k; j++) {
             calcIntervalOperation(&(points)[j][0], NULL, i, POW, aux);       // points[j][0] ^ i
             calcIntervalOperation(aux, &(powers)[i], 0, SUM, &(powers)[i]);  // powers[i] += points[j][0] ^ i
@@ -158,7 +170,7 @@ void perfSquare(Interval_t **points, Interval_t *powers, Interval_t **coeffs, In
     }
 
     for (int i = 0; i <= n; i++) {
-        calcInterval(0, &(terms)[i]);
+        calcInterval("0", &(terms)[i]);
         for (int j = 0; j < k; j++) {
             calcIntervalOperation(&(points)[j][0], NULL, i, POW, aux);     // points[j][0] ^ i
             calcIntervalOperation(aux, &(points)[j][1], 0, MULT, aux);     // points[j][0] ^ i * points[j][1]

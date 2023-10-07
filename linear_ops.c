@@ -1,13 +1,13 @@
 #include "linear_ops.h"
 
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 
 void copyMatrixInterval(Interval_t **A, Interval_t ***B, int n) {
     mallocIntervalMatrix(B, n, n);
-    for(int i = 0; i < n; i++) {
-        for(int j = 0; j < n; j++) {
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
             (*B)[i][j] = A[i][j];
         }
     }
@@ -15,7 +15,7 @@ void copyMatrixInterval(Interval_t **A, Interval_t ***B, int n) {
 
 void copyVectorInterval(Interval_t *A, Interval_t **B, int n) {
     *B = (Interval_t *)malloc((n) * sizeof(Interval_t));
-    for(int i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++) {
         (*B)[i] = A[i];
     }
 }
@@ -41,29 +41,28 @@ void swapSystemLines(Interval_t **A, Interval_t *b, int i, int iPivo) {
 
 void gaussElimPivot(Interval_t **A, Interval_t *b, int n) {
     Interval_t m, result;
-    
+
     for (int i = 0; i < n; i++) {
         int iPivo = findPivotLine(A, i, n);
         if (iPivo != i) {
             swapSystemLines(A, b, i, iPivo);
         }
         for (int k = i + 1; k < n; k++) {
-            calcIntervalOperation(&(A)[k][i], &(A)[i][i], 0, DIV, &result);
-            m = result;
-            calcInterval(0, &(A)[k][i]);
+            calcIntervalOperation(&(A)[k][i], &(A)[i][i], 0, DIV, &m);  // m = A[k][i] / A[i][i]
+            calcInterval("0", &(A)[k][i]);                              // A[k][i] = 0
             for (int j = i + 1; j < n; j++) {
-                calcIntervalOperation(&m, &(A)[i][j], 0, MULT, &result);
-                calcIntervalOperation(&(A)[k][j], &result, 0, SUB, &(A)[k][j]);
+                calcIntervalOperation(&m, &(A)[i][j], 0, MULT, &result);         // result = m * A[i][j]
+                calcIntervalOperation(&(A)[k][j], &result, 0, SUB, &(A)[k][j]);  // A[k][j] -= result
             }
-            calcIntervalOperation(&m, &(b)[i], 0, MULT, &result);
-            calcIntervalOperation(&(b)[k], &result, 0, SUB, &(b)[k]);
+            calcIntervalOperation(&m, &(b)[i], 0, MULT, &result);      // result = m * b[i]
+            calcIntervalOperation(&(b)[k], &result, 0, SUB, &(b)[k]);  // b[k] -= result
         }
     }
 }
 
 void backSubstitution(Interval_t **A, Interval_t *b, Interval_t **x, int n) {
     Interval_t result;
-    
+
     *x = (Interval_t *)malloc((n) * sizeof(Interval_t));
     for (int i = n - 1; i >= 0; i--) {
         (*x)[i] = b[i];
@@ -77,7 +76,7 @@ void backSubstitution(Interval_t **A, Interval_t *b, Interval_t **x, int n) {
 
 void calcResidue(Interval_t **A, Interval_t *b, Interval_t *x, Interval_t **r, int n) {
     Interval_t result;
-    
+
     *r = (Interval_t *)malloc((n) * sizeof(Interval_t));
     for (int i = 0; i < n; i++) {
         (*r)[i].min = b[i].min * -1;
@@ -89,13 +88,13 @@ void calcResidue(Interval_t **A, Interval_t *b, Interval_t *x, Interval_t **r, i
     }
 }
 
-void printInputs(double **A, double *b, int n) {
+void printInputs(Interval_t **A, Interval_t *b, int n) {
     for (int i = 0; i < n; i++) {
         printf("| ");
         for (int j = 0; j < n; j++) {
-            printf("%lf ", A[i][j]);
+            printf("[%c%e, %c%e] ", A[i][j].min < 0 ? '-' : '+', fabs(A[i][j].min), A[i][j].max < 0 ? '-' : '+', fabs(A[i][j].max));
         }
-        printf("| %lf\n", b[i]);
+        printf("| [%c%e, %c%e]\n", b[i].min < 0 ? '-' : '+', fabs(b[i].min), b[i].max < 0 ? '-' : '+', fabs(b[i].max));
     }
 }
 

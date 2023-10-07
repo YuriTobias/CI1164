@@ -14,7 +14,7 @@ double maxf4(double a, double b, double c, double d);
 
 double maxf2(double a, double b);
 
-void calcInterval(double number, Interval_t *interval);
+void calcInterval(char *number, Interval_t *interval);
 
 void calcIntervalOperation(Interval_t *operandA, Interval_t *operandB, int exp, enum OPERATIONS operation, Interval_t *result);
 
