@@ -95,22 +95,6 @@ void leastSquaresSystem(Interval_t **points, Interval_t *powers, Interval_t **co
     free(aux);
 }
 
-void copyMatrixInterval(Interval_t **src, Interval_t ***dest, int rows, int cols) {
-    mallocIntervalMatrix(dest, rows, cols);
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
-            (*dest)[i][j] = src[i][j];
-        }
-    }
-}
-
-void copyVectorInterval(Interval_t *src, Interval_t **dest, int size) {
-    *dest = (Interval_t *)malloc((size) * sizeof(Interval_t));
-    for (int i = 0; i < size; i++) {
-        (*dest)[i] = src[i];
-    }
-}
-
 int findPivotLine(Interval_t **coeffs, int i, int size) {
     int bigger = i;
     for (int j = i + 1; j < size; j++) {
@@ -165,27 +149,28 @@ void backSubstitution(Interval_t **coeffs, Interval_t *terms, Interval_t **solut
     }
 }
 
-void calcResidue(Interval_t **coeffs, Interval_t *terms, Interval_t *solution, Interval_t **residue, int size) {
-    Interval_t result;
+void calcResidual(Interval_t **points, Interval_t *solution, Interval_t **residuals, int degree, int npoints) {
+    Interval_t result, mult;
 
-    *residue = (Interval_t *)malloc((size) * sizeof(Interval_t));
-    for (int i = 0; i < size; i++) {
-        (*residue)[i].lower = terms[i].lower * -1;
-        (*residue)[i].upper = terms[i].upper * -1;
-        for (int j = 0; j < size; j++) {
-            intervalOperation(&(coeffs)[i][j], &(solution)[j], 0, MULT, &result);
-            intervalOperation(&(*residue)[i], &result, 0, SUM, &(*residue)[i]);
+    *residuals = (Interval_t *)malloc((npoints) * sizeof(Interval_t));
+    for (int i = 0; i < npoints; i++) {
+        initInterval("0", &result);
+        for (int j = 0; j <= degree; j++) {
+            intervalOperation(&(points)[i][0], NULL, j, POW, &mult);   // mult = points[i][0] ^ j
+            intervalOperation(&mult, &(solution)[j], 0, MULT, &mult);  // mult = points[i][0] ^ j * solution[j]
+            intervalOperation(&result, &mult, 0, SUM, &result);        // result += points[i][0] ^ j * solution[j]
         }
+        intervalOperation(&(points)[i][1], &result, 0, SUB, &(*residuals)[i]);  // residuals[i] = points[i][1] - result
     }
 }
 
-void printResults(Interval_t *solution, Interval_t *residues, int size, double leastSquaresTs, double systemSolutionTs) {
-    for (int i = 0; i < size; i++) {
+void printResults(Interval_t *solution, Interval_t *residuals, int npoints, int degree, double leastSquaresTs, double systemSolutionTs) {
+    for (int i = 0; i <= degree; i++) {
         printf("[%.8e , %.8e] ", solution[i].lower, solution[i].upper);
     }
     printf("\n");
-    for (int i = 0; i < size; i++) {
-        printf("[%.8e , %.8e] ", residues[i].lower, residues[i].upper);
+    for (int i = 0; i < npoints; i++) {
+        printf("[%.8e , %.8e] ", residuals[i].lower, residuals[i].upper);
     }
     printf("\n");
     printf("%.8e\n", leastSquaresTs);

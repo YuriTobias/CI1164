@@ -74,25 +74,6 @@ void initData(Interval_t ***points, Interval_t **powers, Interval_t ***coeffs, I
 void leastSquaresSystem(Interval_t **points, Interval_t *powers, Interval_t **coeffs, Interval_t *terms, int degree, int nPoints);
 
 /**
- * Copies a matrix of intervals to another matrix of intervals
- * @param src pointer to the matrix to be copied
- * @param dest pointer to the matrix that will store the copy
- * @param rows number of rows of the matrix
- * @param cols number of columns of the matrix
- * @return void
- */
-void copyMatrixInterval(Interval_t **src, Interval_t ***dest, int rows, int cols);
-
-/**
- * Copies a vector of intervals to another vector of intervals
- * @param src pointer to the vector to be copied
- * @param dest pointer to the vector that will store the copy
- * @param n size of the vector
- * @return void
- */
-void copyVectorInterval(Interval_t *src, Interval_t **dest, int size);
-
-/**
  * Iterates through the lines above the pivot line to find the line with the biggest pivot
  * @param coeffs pointer to the matrix A of coefficients
  * @param i pivot line (also the pivot column)
@@ -131,25 +112,25 @@ void gaussElimPivot(Interval_t **coeffs, Interval_t *terms, int size);
 void backSubstitution(Interval_t **coeffs, Interval_t *terms, Interval_t **solution, int size);
 
 /**
- * Calculates the residue for each equation according to the vector x of solutions
- * @param coeffs pointer to the matrix A of coefficients
- * @param terms pointer to the vector b of independent terms
- * @param solution pointer to the vector x of solutions
- * @param residue pointer to the vector r of residue
- * @param size size of the system
- *
+ * Calculates the residual for each equation according to the vector x of solutions
+ * @param points pointer to the matrix of points
+ * @param solution pointer to the vector of solutions
+ * @param residuals pointer to the vector of residuals (to be initialized)
+ * @param degree degree of the polynomial
+ * @param npoints number of points
  */
-void calcResidue(Interval_t **coeffs, Interval_t *terms, Interval_t *solution, Interval_t **residue, int size);
+void calcResidual(Interval_t **points, Interval_t *solution, Interval_t **residuals, int degree, int npoints);
 
 /**
- * Prints the results of the program, including the solution of the system, the residues and the execution times
- * @param solution pointer to the vector x of solutions
- * @param residues pointer to the vector r of residues
- * @param size size of the vectors of solutions and residues, i.e., size of the system
+ * Prints the results of the program, including the solution of the system, the residuals and the execution times
+ * @param solution pointer to the vector solutions
+ * @param residuals pointer to the vector residuals
+ * @param npoints size of the vector of residuals, i.e., number of points
+ * @param degree degree of the polynomial
  * @param leastSquaresTs execution time of the least squares method
  * @param systemSolutionTs execution time of the system solution method (Gaussian elimination with partial pivoting and back substitution)
  * @return void
  */
-void printResults(Interval_t *solution, Interval_t *residues, int size, double leastSquaresTs, double systemSolutionTs);
+void printResults(Interval_t *solution, Interval_t *residuals, int npoints, int degree, double leastSquaresTs, double systemSolutionTs);
 
 #endif  // SYSTEM_OPS_H
