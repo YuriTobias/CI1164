@@ -6,32 +6,32 @@
 #include <stdlib.h>
 #include <string.h>
 
-double minf(double a, double b, double c, double d) {
-    double min = a;
-    if (b < min) min = b;
-    if (c < min) min = c;
-    if (d < min) min = d;
-    return min;
+double minDouble4(double a, double b, double c, double d) {
+    double lower = a;
+    if (b < lower) lower = b;
+    if (c < lower) lower = c;
+    if (d < lower) lower = d;
+    return lower;
 }
 
-double maxf4(double a, double b, double c, double d) {
-    double max = a;
-    if (b > max) max = b;
-    if (c > max) max = c;
-    if (d > max) max = d;
-    return max;
+double maxDouble4(double a, double b, double c, double d) {
+    double upper = a;
+    if (b > upper) upper = b;
+    if (c > upper) upper = c;
+    if (d > upper) upper = d;
+    return upper;
 }
 
-double maxf2(double a, double b) { return a > b ? a : b; }
+double maxDouble2(double a, double b) { return a > b ? a : b; }
 
-void calcInterval(char *number, Interval_t *interval) {
+void initInterval(char *number, Interval_t *interval) {
     fesetround(FE_DOWNWARD);
-    interval->min = atof(number);
+    interval->lower = atof(number);
     fesetround(FE_UPWARD);
-    interval->max = atof(number);
+    interval->upper = atof(number);
 }
 
-void calcIntervalOperation(Interval_t *operandA, Interval_t *operandB, int exp, enum OPERATIONS operation, Interval_t *result) {
+void intervalOperation(Interval_t *operandA, Interval_t *operandB, int exp, enum OPERATIONS operation, Interval_t *result) {
     Interval_t *copyA = (Interval_t *)malloc(sizeof(Interval_t));
     Interval_t *copyB = (Interval_t *)malloc(sizeof(Interval_t));
     memcpy(copyA, operandA, sizeof(Interval_t));
@@ -39,55 +39,52 @@ void calcIntervalOperation(Interval_t *operandA, Interval_t *operandB, int exp, 
 
     switch (operation) {
         case SUM:
-            result->min = copyA->min + copyB->min;
-            result->max = copyA->max + copyB->max;
+            result->lower = copyA->lower + copyB->lower;
+            result->upper = copyA->upper + copyB->upper;
             break;
         case SUB:
-            result->min = copyA->min - copyB->max;
-            result->max = copyA->max - copyB->min;
+            result->lower = copyA->lower - copyB->upper;
+            result->upper = copyA->upper - copyB->lower;
             break;
         case MULT:
-            result->min = minf(copyA->min * copyB->min, copyA->min * copyB->max, copyA->max * copyB->min, copyA->max * copyB->max);
-            result->max = maxf4(copyA->min * copyB->min, copyA->min * copyB->max, copyA->max * copyB->min, copyA->max * copyB->max);
+            result->lower = minDouble4(copyA->lower * copyB->lower, copyA->lower * copyB->upper, copyA->upper * copyB->lower,
+                                       copyA->upper * copyB->upper);
+            result->upper = maxDouble4(copyA->lower * copyB->lower, copyA->lower * copyB->upper, copyA->upper * copyB->lower,
+                                       copyA->upper * copyB->upper);
             break;
         case DIV:
-            if (copyB->min <= 0 && copyB->max >= 0) {
-                result->min = -INFINITY;
-                result->max = INFINITY;
+            if (copyB->lower <= 0 && copyB->upper >= 0) {
+                result->lower = -INFINITY;
+                result->upper = INFINITY;
                 break;
             }
-            result->min = minf(copyA->min / copyB->min, copyA->min / copyB->max, copyA->max / copyB->min, copyA->max / copyB->max);
-            result->max = maxf4(copyA->min / copyB->min, copyA->min / copyB->max, copyA->max / copyB->min, copyA->max / copyB->max);
+            result->lower = minDouble4(copyA->lower / copyB->lower, copyA->lower / copyB->upper, copyA->upper / copyB->lower,
+                                       copyA->upper / copyB->upper);
+            result->upper = maxDouble4(copyA->lower / copyB->lower, copyA->lower / copyB->upper, copyA->upper / copyB->lower,
+                                       copyA->upper / copyB->upper);
             break;
         case POW:
             if (exp == 0) {
-                result->min = 1;
-                result->max = 1;
+                result->lower = 1;
+                result->upper = 1;
             } else if (exp % 2 != 0) {
-                result->min = pow(copyA->min, exp);
-                result->max = pow(copyA->max, exp);
-            } else if (exp % 2 == 0 && copyA->min >= 0) {
-                result->min = pow(copyA->min, exp);
-                result->max = pow(copyA->max, exp);
-            } else if (exp % 2 == 0 && copyA->max < 0) {
-                result->min = pow(copyA->max, exp);
-                result->max = pow(copyA->min, exp);
+                result->lower = pow(copyA->lower, exp);
+                result->upper = pow(copyA->upper, exp);
+            } else if (exp % 2 == 0 && copyA->lower >= 0) {
+                result->lower = pow(copyA->lower, exp);
+                result->upper = pow(copyA->upper, exp);
+            } else if (exp % 2 == 0 && copyA->upper < 0) {
+                result->lower = pow(copyA->upper, exp);
+                result->upper = pow(copyA->lower, exp);
             } else {
-                result->min = 0;
-                result->max = maxf2(pow(copyA->min, exp), pow(copyA->max, exp));
+                result->lower = 0;
+                result->upper = maxDouble2(pow(copyA->lower, exp), pow(copyA->upper, exp));
             }
             break;
     }
 
     free(copyA);
     free(copyB);
-}
-
-void mallocMatrix(double ***matrix, int rows, int cols) {
-    *matrix = (double **)malloc(rows * sizeof(double *));
-    for (int i = 0; i < rows; i++) {
-        (*matrix)[i] = (double *)malloc(cols * sizeof(double));
-    }
 }
 
 void mallocIntervalMatrix(Interval_t ***matrix, int rows, int cols) {
@@ -105,73 +102,65 @@ void freeIntervalMatrix(Interval_t ***matrix, int size) {
     *matrix = NULL;
 }
 
-void freeMatrix(double ***matrix, int size) {
+void printSystem(Interval_t **coeffs, Interval_t *terms, int size) {
     for (int i = 0; i < size; i++) {
-        free((*matrix)[i]);
-    }
-    free(*matrix);
-    *matrix = NULL;
-}
-
-void printSystem(Interval_t **a, Interval_t *b, int n) {
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
-            printf("[%e, %e] ", a[i][j].min, a[i][j].max);
+        for (int j = 0; j < size; j++) {
+            printf("[%.8e, %.8e] ", coeffs[i][j].lower, coeffs[i][j].upper);
         }
-        printf("| [%e, %e]\n", b[i].min, b[i].max);
+        printf("| [%.8e, %.8e]\n", terms[i].lower, terms[i].upper);
     }
 }
 
-void printPoints(Interval_t **points, int n) {
-    for (int i = 0; i < n; i++) {
-        printf("[%e, %e] = [%e, %e]\n", points[i][0].min, points[i][0].max, points[i][1].min, points[i][1].max);
+void printPoints(Interval_t **points, int size) {
+    for (int i = 0; i < size; i++) {
+        printf("[%.8e, %.8e] = [%.8e, %.8e]\n", points[i][0].lower, points[i][0].upper, points[i][1].lower, points[i][1].upper);
     }
 }
 
-void initInputs(Interval_t ***points, Interval_t **powers, Interval_t ***coeffs, Interval_t **terms, int *k, int *n) {
+void initData(Interval_t ***points, Interval_t **powers, Interval_t ***coeffs, Interval_t **terms, int *nPoints, int *degree) {
     char inputAux[100];
 
-    if (scanf("%d", n) == 0) {
+    if (scanf("%d", degree) == 0) {
         exit(1);
     }
-    if (scanf("%d", k) == 0) {
+    if (scanf("%d", nPoints) == 0) {
         exit(1);
     }
     getchar();
 
-    mallocIntervalMatrix(points, *k, 2);
-    mallocIntervalMatrix(coeffs, *n + 1, *n + 1);
-    *powers = (Interval_t *)malloc((*n + *n + 1) * sizeof(Interval_t));
-    *terms = (Interval_t *)malloc((*n + 1) * sizeof(Interval_t));
+    mallocIntervalMatrix(points, *nPoints, 2);
+    mallocIntervalMatrix(coeffs, *degree + 1, *degree + 1);
+    *powers = (Interval_t *)malloc((*degree + *degree + 1) * sizeof(Interval_t));
+    *terms = (Interval_t *)malloc((*degree + 1) * sizeof(Interval_t));
 
-    for (int i = 0; i < *k; i++) {
+    for (int i = 0; i < *nPoints; i++) {
         if (fgets(inputAux, 100, stdin) == NULL) {
             exit(1);
         }
         char *token = strtok(inputAux, " ");
-        calcInterval(token, &(*points)[i][0]);
+        initInterval(token, &(*points)[i][0]);
         token = strtok(NULL, " ");
-        calcInterval(token, &(*points)[i][1]);
+        initInterval(token, &(*points)[i][1]);
     }
 }
 
-void perfSquare(Interval_t **points, Interval_t *powers, Interval_t **coeffs, Interval_t *terms, int k, int n) {
+void leastSquaresSystem(Interval_t **points, Interval_t *powers, Interval_t **coeffs, Interval_t *terms, int k, int n) {
     Interval_t *aux = (Interval_t *)malloc(sizeof(Interval_t));
 
     for (int i = 0; i <= n + n; i++) {
-        calcInterval("0", &(powers)[i]);
+        initInterval("0", &(powers)[i]);
         for (int j = 0; j < k; j++) {
-            calcIntervalOperation(&(points)[j][0], NULL, i, POW, aux);       // points[j][0] ^ i
-            calcIntervalOperation(aux, &(powers)[i], 0, SUM, &(powers)[i]);  // powers[i] += points[j][0] ^ i
+            intervalOperation(&(points)[j][0], NULL, i, POW, aux);       // points[j][0] ^ i
+            intervalOperation(aux, &(powers)[i], 0, SUM, &(powers)[i]);  // powers[i] += points[j][0] ^ i
         }
     }
 
     for (int i = 0; i <= n; i++) {
-        calcInterval("0", &(terms)[i]);
+        initInterval("0", &(terms)[i]);
         for (int j = 0; j < k; j++) {
-            calcIntervalOperation(&(points)[j][0], NULL, i, POW, aux);     // points[j][0] ^ i
-            calcIntervalOperation(aux, &(points)[j][1], 0, MULT, aux);     // points[j][0] ^ i * points[j][1]
-            calcIntervalOperation(aux, &(terms)[i], 0, SUM, &(terms)[i]);  // terms[i] += points[j][0] ^ i * points[j][1]
+            intervalOperation(&(points)[j][0], NULL, i, POW, aux);     // points[j][0] ^ i
+            intervalOperation(aux, &(points)[j][1], 0, MULT, aux);     // points[j][0] ^ i * points[j][1]
+            intervalOperation(aux, &(terms)[i], 0, SUM, &(terms)[i]);  // terms[i] += points[j][0] ^ i * points[j][1]
         }
     }
 
