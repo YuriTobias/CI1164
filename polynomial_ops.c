@@ -39,16 +39,22 @@ void intervalOperation(Interval_t *operandA, Interval_t *operandB, int exp, enum
 
     switch (operation) {
         case SUM:
+            fesetround(FE_DOWNWARD);
             result->lower = copyA->lower + copyB->lower;
+            fesetround(FE_UPWARD);
             result->upper = copyA->upper + copyB->upper;
             break;
         case SUB:
+            fesetround(FE_DOWNWARD);
             result->lower = copyA->lower - copyB->upper;
+            fesetround(FE_UPWARD);
             result->upper = copyA->upper - copyB->lower;
             break;
         case MULT:
+            fesetround(FE_DOWNWARD);
             result->lower = minDouble4(copyA->lower * copyB->lower, copyA->lower * copyB->upper, copyA->upper * copyB->lower,
                                        copyA->upper * copyB->upper);
+            fesetround(FE_UPWARD);
             result->upper = maxDouble4(copyA->lower * copyB->lower, copyA->lower * copyB->upper, copyA->upper * copyB->lower,
                                        copyA->upper * copyB->upper);
             break;
@@ -58,8 +64,10 @@ void intervalOperation(Interval_t *operandA, Interval_t *operandB, int exp, enum
                 result->upper = INFINITY;
                 break;
             }
+            fesetround(FE_DOWNWARD);
             result->lower = minDouble4(copyA->lower / copyB->lower, copyA->lower / copyB->upper, copyA->upper / copyB->lower,
                                        copyA->upper / copyB->upper);
+            fesetround(FE_UPWARD);
             result->upper = maxDouble4(copyA->lower / copyB->lower, copyA->lower / copyB->upper, copyA->upper / copyB->lower,
                                        copyA->upper / copyB->upper);
             break;
@@ -68,16 +76,23 @@ void intervalOperation(Interval_t *operandA, Interval_t *operandB, int exp, enum
                 result->lower = 1;
                 result->upper = 1;
             } else if (exp % 2 != 0) {
+                fesetround(FE_DOWNWARD);
                 result->lower = pow(copyA->lower, exp);
+                fesetround(FE_UPWARD);
                 result->upper = pow(copyA->upper, exp);
             } else if (exp % 2 == 0 && copyA->lower >= 0) {
+                fesetround(FE_DOWNWARD);
                 result->lower = pow(copyA->lower, exp);
+                fesetround(FE_UPWARD);
                 result->upper = pow(copyA->upper, exp);
             } else if (exp % 2 == 0 && copyA->upper < 0) {
+                fesetround(FE_DOWNWARD);
                 result->lower = pow(copyA->upper, exp);
+                fesetround(FE_UPWARD);
                 result->upper = pow(copyA->lower, exp);
             } else {
                 result->lower = 0;
+                fesetround(FE_UPWARD);
                 result->upper = maxDouble2(pow(copyA->lower, exp), pow(copyA->upper, exp));
             }
             break;
