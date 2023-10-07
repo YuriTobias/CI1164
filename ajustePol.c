@@ -33,15 +33,15 @@ int main(int argc, char *argv[]) {
     calcResidue(coeffs, terms, alphas, &residues, n + 1);
 
     for (int i = 0; i < n + 1; i++) {
-        printf("[%lf , %lf] ", alphas[i].min, alphas[i].max);
+        printf("[%e , %e] ", alphas[i].min, alphas[i].max);
     }
     printf("\n");
     for (int i = 0; i < n + 1; i++) {
-        printf("[%lf , %lf] ", residues[i].min, residues[i].max);
+        printf("[%e , %e] ", residues[i].min, residues[i].max);
     }
     printf("\n");
-    printf("%lf\n", tgeraSL);
-    printf("%lf\n", tsolSL);
+    printf("%e\n", tgeraSL);
+    printf("%e\n", tsolSL);
 
     freeIntervalMatrix(&cpycoeffs, n + 1);
     freeIntervalMatrix(&points, k);

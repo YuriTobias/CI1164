@@ -81,8 +81,6 @@ void calcIntervalOperation(Interval_t *operandA, Interval_t *operandB, int exp, 
 
     free(copyA);
     free(copyB);
-
-    result->max = nextafterf(result->max, INFINITY);
 }
 
 void mallocMatrix(double ***matrix, int rows, int cols) {
@@ -118,15 +116,15 @@ void freeMatrix(double ***matrix, int size) {
 void printSystem(Interval_t **a, Interval_t *b, int n) {
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
-            printf("[%lf, %lf] ", a[i][j].min, a[i][j].max);
+            printf("[%e, %e] ", a[i][j].min, a[i][j].max);
         }
-        printf("| [%lf, %lf]\n", b[i].min, b[i].max);
+        printf("| [%e, %e]\n", b[i].min, b[i].max);
     }
 }
 
 void printPoints(Interval_t **points, int n) {
     for (int i = 0; i < n; i++) {
-        printf("[%lf, %lf] = [%lf, %lf]\n", points[i][0].min, points[i][0].max, points[i][1].min, points[i][1].max);
+        printf("[%e, %e] = [%e, %e]\n", points[i][0].min, points[i][0].max, points[i][1].min, points[i][1].max);
     }
 }
 
