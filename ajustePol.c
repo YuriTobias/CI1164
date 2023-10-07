@@ -2,9 +2,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "interval_ops.h"
 #include "likwid.h"
-#include "linear_ops.h"
-#include "polynomial_ops.h"
+#include "system_ops.h"
 #include "utils.h"
 
 int main(int argc, char *argv[]) {

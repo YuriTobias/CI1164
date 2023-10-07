@@ -1,7 +1,77 @@
-#ifndef LINEAR_OPS_H
-#define LINEAR_OPS_H
+#ifndef SYSTEM_OPS_H
+#define SYSTEM_OPS_H
 
-#include "polynomial_ops.h"
+#include "interval_ops.h"
+
+/**
+ * Identifies the smallest of four double numbers
+ * @param a first number
+ * @param b second number
+ * @param c third number
+ * @param d fourth number
+ * @return smallest number
+ */
+double minDouble4(double a, double b, double c, double d);
+
+/**
+ * Identifies the largest of four double numbers
+ * @param a first number
+ * @param b second number
+ * @param c third number
+ * @param d fourth number
+ * @return largest number
+ */
+double maxDouble4(double a, double b, double c, double d);
+
+/**
+ * Identifies the largest of two double numbers
+ * @param a first number
+ * @param b second number
+ * @return largest number
+ */
+double maxDouble2(double a, double b);
+
+/**
+ * Prints a formatted interval linear system
+ * @param coeffs pointer to the matrix A of coefficients
+ * @param terms pointer to the vector terms of independent terms
+ * @param size size of the system
+ * @return void
+ */
+void printSystem(Interval_t **coeffs, Interval_t *terms, int size);
+
+/**
+ * Prints a vector of points
+ * @param points pointer to the vector of points
+ * @param size size of the vector
+ * @return void
+ */
+void printPoints(Interval_t **points, int size);
+
+/**
+ * Allocates memory for all necessary data structures related to the curves adjustment problem and initializes them with user inputs if
+ * necessary
+ * @param points pointer to the matrix of points
+ * @param powers pointer to the vector of powers
+ * @param coeffs pointer to the matrix of coefficients
+ * @param terms pointer to the vector of independent terms
+ * @param nPoints pointer to the number of points
+ * @param degree pointer to the degree of the polynomial to be adjusted
+ * @return void
+ */
+void initData(Interval_t ***points, Interval_t **powers, Interval_t ***coeffs, Interval_t **terms, int *nPoints, int *degree);
+
+/**
+ * Generate a linear system of equations to adjust a polynomial to a set of points
+ * @param points pointer to the matrix of points
+ * @param powers pointer to the vector of powers
+ * @param coeffs pointer to the matrix of coefficients
+ * @param terms pointer to the vector of independent terms
+ * @param degree degree of the polynomial to be adjusted
+ * @param nPoints number of points
+ * @return void
+ */
+void leastSquaresSystem(Interval_t **points, Interval_t *powers, Interval_t **coeffs, Interval_t *terms, int degree, int nPoints);
 
 /**
  * Copies a matrix of intervals to another matrix of intervals
@@ -82,4 +152,4 @@ void calcResidue(Interval_t **coeffs, Interval_t *terms, Interval_t *solution, I
  */
 void printResults(Interval_t *solution, Interval_t *residues, int size, double leastSquaresTs, double systemSolutionTs);
 
-#endif
+#endif  // SYSTEM_OPS_H

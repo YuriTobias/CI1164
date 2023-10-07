@@ -3,7 +3,7 @@ CFLAGS = -lm -Wall -g -I$(LIKWID_HOME)/include -DLIKWID_PERFMON -O3 -mavx -march
 LFLAGS = -L$(LIKWID_HOME)/lib -llikwid
 CC = gcc
 
-objects = ajustePol.o polynomial_ops.o linear_ops.o utils.o
+objects = ajustePol.o system_ops.o interval_ops.o utils.o
 
 EXECUTABLE = ajustePol
 
@@ -12,13 +12,13 @@ all: $(EXECUTABLE)
 $(EXECUTABLE): $(objects)
 	$(CC) $(objects) $(CFLAGS) -o $(EXECUTABLE) $(LFLAGS)
 
-ajustePol.o: ajustePol.c polynomial_ops.h
+ajustePol.o: ajustePol.c system_ops.h
 	$(CC) -c $< $(CFLAGS)
 
-polynomial_ops.o: polynomial_ops.c polynomial_ops.h
+system_ops.o: system_ops.c system_ops.h
 	$(CC) -c $< $(CFLAGS)
 
-linear_ops.o: linear_ops.c linear_ops.h
+interval_ops.o: interval_ops.c interval_ops.h
 	$(CC) -c $< $(CFLAGS)
 
 utils.o: utils.c utils.h
