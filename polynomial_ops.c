@@ -150,11 +150,10 @@ void initInputs(Interval_t ***points, Interval_t **powers, Interval_t ***coeffs,
         if (fgets(inputAux, 100, stdin) == NULL) {
             exit(1);
         }
-        calcInterval(inputAux, &(*points)[i][0]);
-        if (fgets(inputAux, 100, stdin) == NULL) {
-            exit(1);
-        }
-        calcInterval(inputAux, &(*points)[i][1]);
+        char *token = strtok(inputAux, " ");
+        calcInterval(token, &(*points)[i][0]);
+        token = strtok(NULL, " ");
+        calcInterval(token, &(*points)[i][1]);
     }
 }
 
