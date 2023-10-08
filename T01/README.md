@@ -23,3 +23,4 @@ Especificidades:
 Módulos:
 - interval_ops: contém as funções e estruturas relacionadas à alocações, inicializações e cálculos intervalares;
 - system_ops: conteḿ as funções relacionadas à construção e solução do sistema linear, incluindo o método dos mínimos quadrados, a eliminação gaussiana com pivoteamento parcial e a retrossubstituição, tal como outras funções periférias relacionadas. Inclui também funções relacionadas à impressão de resultados e estruturas dos sistemas construídos;
+- utils: fornecido pelos docentes;
