@@ -1,11 +1,11 @@
 # PROGRAMA
         PROG = matmult
-        OBJS = $(PROG).o matriz.o
+        OBJS = $(PROG).o matriz.o utils.o
 
 # Compilador
            CC = gcc -Wall
 
-       CFLAGS =  
+       CFLAGS = -g
        LFLAGS = -lm
 
 # Lista de arquivos para distribuição

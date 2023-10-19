@@ -1,0 +1,4 @@
+*.o
+matmult
+settings.json
+ci1164-utils
