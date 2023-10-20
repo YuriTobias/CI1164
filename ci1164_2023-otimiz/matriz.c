@@ -126,8 +126,13 @@ void multMatVetOpt(MatRow mat, Vetor v, int m, int n, Vetor res) {
                 for (int i = istart; i < (iend - iend % UF); i += UF) {
                     for (int j = jstart; j < jend; ++j) {
                         res[i] += mat[n * i + j] * v[j];
-
                         res[i + 1] += mat[n * (i + 1) + j] * v[j];
+                        res[i + 2] += mat[n * (i + 2) + j] * v[j];
+                        res[i + 3] += mat[n * (i + 3) + j] * v[j];
+                        // res[i + 4] += mat[n * (i + 4) + j] * v[j];
+                        // res[i + 5] += mat[n * (i + 5) + j] * v[j];
+                        // res[i + 6] += mat[n * (i + 6) + j] * v[j];
+                        // res[i + 7] += mat[n * (i + 7) + j] * v[j];
                     }
                 }
                 // Remainder loop
@@ -183,6 +188,12 @@ void multMatMatOpt(MatRow A, MatRow B, int n, MatRow C) {
                         for (int k = kstart; k < kend; ++k) {
                             C[i * n + j] += A[i * n + k] * B[k * n + j];
                             C[(i + 1) * n + j] += A[(i + 1) * n + k] * B[k * n + j];
+                            C[(i + 2) * n + j] += A[(i + 2) * n + k] * B[k * n + j];
+                            C[(i + 3) * n + j] += A[(i + 3) * n + k] * B[k * n + j];
+                            // C[(i + 4) * n + j] += A[(i + 4) * n + k] * B[k * n + j];
+                            // C[(i + 5) * n + j] += A[(i + 5) * n + k] * B[k * n + j];
+                            // C[(i + 6) * n + j] += A[(i + 6) * n + k] * B[k * n + j];
+                            // C[(i + 7) * n + j] += A[(i + 7) * n + k] * B[k * n + j];
                         }
                     }
                 }

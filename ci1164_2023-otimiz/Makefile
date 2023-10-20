@@ -1,3 +1,5 @@
+LIKWID_HOME = /usr/local
+
 # PROGRAMA
         PROG = matmult
         OBJS = $(PROG).o matriz.o utils.o
@@ -5,8 +7,8 @@
 # Compilador
            CC = gcc -Wall
 
-       CFLAGS = -g
-       LFLAGS = -lm
+       CFLAGS = -Wall -g -I$(LIKWID_HOME)/include -DLIKWID_PERFMON -O3 -mavx -march=native
+       LFLAGS = -lm -L$(LIKWID_HOME)/lib -llikwid
 
 # Lista de arquivos para distribuição
 DISTFILES = *.c *.h README.md Makefile perfctr

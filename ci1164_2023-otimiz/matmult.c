@@ -4,6 +4,7 @@
 #include <string.h>
 #include <time.h>
 
+#include "likwid.h"
 #include "matriz.h"
 #include "utils.h"
 
@@ -27,6 +28,7 @@ static void usage(char *progname) {
 int main(int argc, char *argv[]) {
     int n = DEF_SIZE;
 
+    LIKWID_MARKER_INIT;
     MatRow mRow_1, mRow_2, resMat;
     Vetor vet, res;
 
@@ -67,25 +69,35 @@ int main(int argc, char *argv[]) {
 
     rtime_t multMatVetTime, multMatMatTime, multMatVetTimeOpt, multMatMatTimeOpt;
     multMatVetTime = timestamp();
+    LIKWID_MARKER_START("multMatVet");
     multMatVet(mRow_1, vet, n, n, res);
+    LIKWID_MARKER_STOP("multMatVet");
     multMatVetTime = timestamp() - multMatVetTime;
 
     multMatMatTime = timestamp();
+    LIKWID_MARKER_START("multMatMat");
     multMatMat(mRow_1, mRow_2, n, resMat);
+    LIKWID_MARKER_STOP("multMatMat");
     multMatMatTime = timestamp() - multMatMatTime;
 
     printf("multMatVetTime: %lf\n", multMatVetTime);
     printf("multMatMatTime: %lf\n", multMatMatTime);
 
+    liberaVetor((void *)res);
+    liberaVetor((void *)resMat);
     res = geraVetor(n, 1);
     resMat = geraMatRow(n, n, 1);
 
     multMatVetTimeOpt = timestamp();
+    LIKWID_MARKER_START("multMatVetOpt");
     multMatVetOpt(mRow_1, vet, n, n, res);
+    LIKWID_MARKER_STOP("multMatVetOpt");
     multMatVetTimeOpt = timestamp() - multMatVetTimeOpt;
 
     multMatMatTimeOpt = timestamp();
+    LIKWID_MARKER_START("multMatMatOpt");
     multMatMatOpt(mRow_1, mRow_2, n, resMat);
+    LIKWID_MARKER_STOP("multMatMatOpt");
     multMatMatTimeOpt = timestamp() - multMatMatTimeOpt;
 
     printf("multMatVetTimeOpt: %lf\n", multMatVetTimeOpt);
@@ -102,5 +114,6 @@ int main(int argc, char *argv[]) {
     liberaVetor((void *)vet);
     liberaVetor((void *)res);
 
+    LIKWID_MARKER_CLOSE;
     return 0;
 }
