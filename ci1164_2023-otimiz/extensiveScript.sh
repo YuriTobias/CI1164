@@ -134,6 +134,19 @@ gnuplot -c plot.gp "FLOPS AVX" "results/flops_avx_MM_UJ.png" "results/flops_avx_
 gnuplot -c plot.gp "FLOPS AVX" "results/flops_avx_MV_UJB.png" "results/flops_avx_MV_UJB.dat" "MatVetUJB" > /dev/null 2>&1
 gnuplot -c plot.gp "FLOPS AVX" "results/flops_avx_MM_UJB.png" "results/flops_avx_MM_UJB.dat" "MatMatUJB" > /dev/null 2>&1
 
+gnuplot -c plot_compared.gp "Time" "results/compared_time_MV.png" "results/time_MV.dat" "MatVet" "results/time_MV_UJ.dat" "MatVetUJ" "results/time_MV_UJB.dat" "MatVetUJB" > /dev/null 2>&1
+gnuplot -c plot_compared.gp "Time" "results/compared_time_MM.png" "results/time_MM.dat" "MatMat" "results/time_MM_UJ.dat" "MatMatUJ" "results/time_MM_UJB.dat" "MatMatUJB" > /dev/null 2>&1
+gnuplot -c plot_compared.gp "Bandwidth" "results/compared_bandwidth_MV.png" "results/bandwidth_MV.dat" "MatVet" "results/bandwidth_MV_UJ.dat" "MatVetUJ" "results/bandwidth_MV_UJB.dat" "MatVetUJB" > /dev/null 2>&1
+gnuplot -c plot_compared.gp "Bandwidth" "results/compared_bandwidth_MM.png" "results/bandwidth_MM.dat" "MatMat" "results/bandwidth_MM_UJ.dat" "MatMatUJ" "results/bandwidth_MM_UJB.dat" "MatMatUJB" > /dev/null 2>&1
+gnuplot -c plot_compared.gp "L2 Miss Ratio" "results/compared_missl2_MV.png" "results/missl2_MV.dat" "MatVet" "results/missl2_MV_UJ.dat" "MatVetUJ" "results/missl2_MV_UJB.dat" "MatVetUJB" > /dev/null 2>&1
+gnuplot -c plot_compared.gp "L2 Miss Ratio" "results/compared_missl2_MM.png" "results/missl2_MM.dat" "MatMat" "results/missl2_MM_UJ.dat" "MatMatUJ" "results/missl2_MM_UJB.dat" "MatMatUJB" > /dev/null 2>&1
+gnuplot -c plot_compared.gp "Energy" "results/compared_energy_MV.png" "results/energy_MV.dat" "MatVet" "results/energy_MV_UJ.dat" "MatVetUJ" "results/energy_MV_UJB.dat" "MatVetUJB" > /dev/null 2>&1
+gnuplot -c plot_compared.gp "Energy" "results/compared_energy_MM.png" "results/energy_MM.dat" "MatMat" "results/energy_MM_UJ.dat" "MatMatUJ" "results/energy_MM_UJB.dat" "MatMatUJB" > /dev/null 2>&1
+gnuplot -c plot_compared.gp "FLOPS" "results/compared_flops_MV.png" "results/flops_MV.dat" "MatVet" "results/flops_MV_UJ.dat" "MatVetUJ" "results/flops_MV_UJB.dat" "MatVetUJB" > /dev/null 2>&1
+gnuplot -c plot_compared.gp "FLOPS" "results/compared_flops_MM.png" "results/flops_MM.dat" "MatMat" "results/flops_MM_UJ.dat" "MatMatUJ" "results/flops_MM_UJB.dat" "MatMatUJB" > /dev/null 2>&1
+gnuplot -c plot_compared.gp "FLOPS AVX" "results/compared_flops_avx_MV.png" "results/flops_avx_MV.dat" "MatVet" "results/flops_avx_MV_UJ.dat" "MatVetUJ" "results/flops_avx_MV_UJB.dat" "MatVetUJB" > /dev/null 2>&1
+gnuplot -c plot_compared.gp "FLOPS AVX" "results/compared_flops_avx_MM.png" "results/flops_avx_MM.dat" "MatMat" "results/flops_avx_MM_UJ.dat" "MatMatUJ" "results/flops_avx_MM_UJB.dat" "MatMatUJB" > /dev/null 2>&1
+
 echo "Removing temporary files"
 rm results/*.dat
 
