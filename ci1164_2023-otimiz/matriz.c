@@ -104,8 +104,8 @@ void multMatVet(MatRow mat, Vetor v, int m, int n, Vetor res) {
 }
 
 /**
- *  Funcao multMatVetOpt:  Efetua multiplicacao entre matriz 'mxn' por vetor
- *                       de 'n' elementos com otimizacao
+ *  Funcao multMatVetUJ:  Efetua multiplicacao entre matriz 'mxn' por vetor
+ *                       de 'n' elementos com otimização de loop unrolling
  *  @param mat matriz 'mxn'
  *  @param m número de linhas da matriz
  *  @param n número de colunas da matriz
@@ -114,7 +114,33 @@ void multMatVet(MatRow mat, Vetor v, int m, int n, Vetor res) {
  *  @return vetor de 'm' elementos
  *
  */
-void multMatVetOpt(MatRow mat, Vetor v, int m, int n, Vetor res) {
+
+void multMatVetUJ(MatRow mat, Vetor v, int m, int n, Vetor res) {
+    /* Efetua a multiplicação */
+    if (res) {
+        for (int i = 0; i < m - m % UF; i += UF) {
+            for (int j = 0; j < n; ++j) {
+                res[i] += mat[n * i + j] * v[j];
+                res[i + 1] += mat[n * (i + 1) + j] * v[j];
+                res[i + 2] += mat[n * (i + 2) + j] * v[j];
+                res[i + 3] += mat[n * (i + 3) + j] * v[j];
+            }
+        }
+    }
+}
+
+/**
+ *  Funcao multMatVetUJB:  Efetua multiplicacao entre matriz 'mxn' por vetor
+ *                       de 'n' elementos com otimizações de loop unrolling e blocking
+ *  @param mat matriz 'mxn'
+ *  @param m número de linhas da matriz
+ *  @param n número de colunas da matriz
+ *  @param res vetor que guarda o resultado. Deve estar previamente alocado e com
+ *             seus elementos inicializados em 0.0 (zero)
+ *  @return vetor de 'm' elementos
+ *
+ */
+void multMatVetUJB(MatRow mat, Vetor v, int m, int n, Vetor res) {
     /* Efetua a multiplicação */
     if (res) {
         for (int ii = 0; ii < m / BK; ++ii) {
@@ -129,10 +155,6 @@ void multMatVetOpt(MatRow mat, Vetor v, int m, int n, Vetor res) {
                         res[i + 1] += mat[n * (i + 1) + j] * v[j];
                         res[i + 2] += mat[n * (i + 2) + j] * v[j];
                         res[i + 3] += mat[n * (i + 3) + j] * v[j];
-                        // res[i + 4] += mat[n * (i + 4) + j] * v[j];
-                        // res[i + 5] += mat[n * (i + 5) + j] * v[j];
-                        // res[i + 6] += mat[n * (i + 6) + j] * v[j];
-                        // res[i + 7] += mat[n * (i + 7) + j] * v[j];
                     }
                 }
                 // Remainder loop
@@ -164,7 +186,7 @@ void multMatMat(MatRow A, MatRow B, int n, MatRow C) {
 }
 
 /**
- *  Funcao multMatMatOpt: Efetua multiplicacao de duas matrizes 'n x n'
+ *  Funcao multMatMatUJ: Efetua multiplicacao de duas matrizes 'n x n' com otimização de loop unrolling
  *  @param A matriz 'n x n'
  *  @param B matriz 'n x n'
  *  @param n ordem da matriz quadrada
@@ -172,7 +194,31 @@ void multMatMat(MatRow A, MatRow B, int n, MatRow C) {
  *             e com seus elementos inicializados em 0.0 (zero)
  *
  */
-void multMatMatOpt(MatRow A, MatRow B, int n, MatRow C) {
+
+void multMatMatUJ(MatRow A, MatRow B, int n, MatRow C) {
+    /* Efetua a multiplicação */
+    for (int i = 0; i < n - n % UF; i += UF) {
+        for (int j = 0; j < n; ++j) {
+            for (int k = 0; k < n; ++k) {
+                C[i * n + j] += A[i * n + k] * B[k * n + j];
+                C[(i + 1) * n + j] += A[(i + 1) * n + k] * B[k * n + j];
+                C[(i + 2) * n + j] += A[(i + 2) * n + k] * B[k * n + j];
+                C[(i + 3) * n + j] += A[(i + 3) * n + k] * B[k * n + j];
+            }
+        }
+    }
+}
+
+/**
+ *  Funcao multMatMatUJB: Efetua multiplicacao de duas matrizes 'n x n' com otimização de loop unrolling e blocking
+ *  @param A matriz 'n x n'
+ *  @param B matriz 'n x n'
+ *  @param n ordem da matriz quadrada
+ *  @param C   matriz que guarda o resultado. Deve ser previamente gerada com 'geraMatPtr()'
+ *             e com seus elementos inicializados em 0.0 (zero)
+ *
+ */
+void multMatMatUJB(MatRow A, MatRow B, int n, MatRow C) {
     for (int ii = 0; ii < n / BK; ++ii) {
         int istart = ii * BK;
         int iend = istart + BK;

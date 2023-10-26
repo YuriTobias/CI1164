@@ -67,7 +67,9 @@ int main(int argc, char *argv[]) {
     printf("=================================\n\n");
 #endif /* _DEBUG_ */
 
-    rtime_t multMatVetTime, multMatMatTime, multMatVetTimeOpt, multMatMatTimeOpt;
+    rtime_t multMatVetTime, multMatMatTime, multMatVetTimeUJ, multMatMatTimeUJ, multMatVetTimeUJB, multMatMatTimeUJB;
+
+    // Rodando sem otimização
     multMatVetTime = timestamp();
     LIKWID_MARKER_START("multMatVet");
     multMatVet(mRow_1, vet, n, n, res);
@@ -88,20 +90,42 @@ int main(int argc, char *argv[]) {
     res = geraVetor(n, 1);
     resMat = geraMatRow(n, n, 1);
 
-    multMatVetTimeOpt = timestamp();
-    LIKWID_MARKER_START("multMatVetOpt");
-    multMatVetOpt(mRow_1, vet, n, n, res);
-    LIKWID_MARKER_STOP("multMatVetOpt");
-    multMatVetTimeOpt = timestamp() - multMatVetTimeOpt;
+    // Rodando com otimização de loop unrolling
+    multMatVetTimeUJ = timestamp();
+    LIKWID_MARKER_START("multMatVetUJ");
+    multMatVetUJ(mRow_1, vet, n, n, res);
+    LIKWID_MARKER_STOP("multMatVetUJ");
+    multMatVetTimeUJ = timestamp() - multMatVetTimeUJ;
 
-    multMatMatTimeOpt = timestamp();
-    LIKWID_MARKER_START("multMatMatOpt");
-    multMatMatOpt(mRow_1, mRow_2, n, resMat);
-    LIKWID_MARKER_STOP("multMatMatOpt");
-    multMatMatTimeOpt = timestamp() - multMatMatTimeOpt;
+    multMatMatTimeUJ = timestamp();
+    LIKWID_MARKER_START("multMatMatUJ");
+    multMatMatUJ(mRow_1, mRow_2, n, resMat);
+    LIKWID_MARKER_STOP("multMatMatUJ");
+    multMatMatTimeUJ = timestamp() - multMatMatTimeUJ;
 
-    printf("multMatVetTimeOpt: %lf\n", multMatVetTimeOpt);
-    printf("multMatMatTimeOpt: %lf\n\n", multMatMatTimeOpt);
+    printf("multMatVetTimeUJ: %lf\n", multMatVetTimeUJ);
+    printf("multMatMatTimeUJ: %lf\n\n", multMatMatTimeUJ);
+
+    liberaVetor((void *)res);
+    liberaVetor((void *)resMat);
+    res = geraVetor(n, 1);
+    resMat = geraMatRow(n, n, 1);
+
+    // Rodando com otimização de loop unrolling e blocking
+    multMatVetTimeUJB = timestamp();
+    LIKWID_MARKER_START("multMatVetUJB");
+    multMatVetUJB(mRow_1, vet, n, n, res);
+    LIKWID_MARKER_STOP("multMatVetUJB");
+    multMatVetTimeUJB = timestamp() - multMatVetTimeUJB;
+
+    multMatMatTimeUJB = timestamp();
+    LIKWID_MARKER_START("multMatMatUJB");
+    multMatMatUJB(mRow_1, mRow_2, n, resMat);
+    LIKWID_MARKER_STOP("multMatMatUJB");
+    multMatMatTimeUJB = timestamp() - multMatMatTimeUJB;
+
+    printf("multMatVetTimeUJB: %lf\n", multMatVetTimeUJB);
+    printf("multMatMatTimeUJB: %lf\n\n", multMatMatTimeUJB);
 
 #ifdef _DEBUG_
     prnVetor(res, n);
