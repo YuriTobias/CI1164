@@ -47,27 +47,27 @@ for size in "${sizes[@]}"; do
     echo "$size $(grep "multMatMatTimeUJB:" output.txt | awk '{print $2}')" >> ./results/time_MM_UJB.dat
     echo "$size $(grep "L3 bandwidth \[MBytes/s\]" output.txt | awk '{print $6}' | awk 'NR==1')" >> ./results/bandwidth_MV.dat
     echo "$size $(grep "L3 bandwidth \[MBytes/s\]" output.txt | awk '{print $6}' | awk 'NR==2')" >> ./results/bandwidth_MM.dat
-    echo "$size $(grep "L3 bandwidth \[MBytes/s\]" output.txt | awk '{print $6}' | awk 'NR==5')" >> ./results/bandwidth_MV_UJB.dat
-    echo "$size $(grep "L3 bandwidth \[MBytes/s\]" output.txt | awk '{print $6}' | awk 'NR==6')" >> ./results/bandwidth_MM_UJB.dat
+    echo "$size $(grep "L3 bandwidth \[MBytes/s\]" output.txt | awk '{print $6}' | awk 'NR==3')" >> ./results/bandwidth_MV_UJB.dat
+    echo "$size $(grep "L3 bandwidth \[MBytes/s\]" output.txt | awk '{print $6}' | awk 'NR==4')" >> ./results/bandwidth_MM_UJB.dat
     likwid-perfctr -C ${CPU} -g L2CACHE -m ./matmult $size > output.txt
     echo "$size $(grep "L2 miss ratio" output.txt | awk '{print $6}' | awk 'NR==1')" >> ./results/missl2_MV.dat
     echo "$size $(grep "L2 miss ratio" output.txt | awk '{print $6}' | awk 'NR==2')" >> ./results/missl2_MM.dat
-    echo "$size $(grep "L2 miss ratio" output.txt | awk '{print $6}' | awk 'NR==5')" >> ./results/missl2_MV_UJB.dat
-    echo "$size $(grep "L2 miss ratio" output.txt | awk '{print $6}' | awk 'NR==6')" >> ./results/missl2_MM_UJB.dat
+    echo "$size $(grep "L2 miss ratio" output.txt | awk '{print $6}' | awk 'NR==3')" >> ./results/missl2_MV_UJB.dat
+    echo "$size $(grep "L2 miss ratio" output.txt | awk '{print $6}' | awk 'NR==4')" >> ./results/missl2_MM_UJB.dat
     likwid-perfctr -C ${CPU} -g ENERGY -m ./matmult $size > output.txt
     echo "$size $(grep "Energy \[J\]" output.txt | awk '{print $5}' | awk 'NR==1')" >> ./results/energy_MV.dat
     echo "$size $(grep "Energy \[J\]" output.txt | awk '{print $5}' | awk 'NR==2')" >> ./results/energy_MM.dat
-    echo "$size $(grep "Energy \[J\]" output.txt | awk '{print $5}' | awk 'NR==5')" >> ./results/energy_MV_UJB.dat
-    echo "$size $(grep "Energy \[J\]" output.txt | awk '{print $5}' | awk 'NR==6')" >> ./results/energy_MM_UJB.dat
+    echo "$size $(grep "Energy \[J\]" output.txt | awk '{print $5}' | awk 'NR==3')" >> ./results/energy_MV_UJB.dat
+    echo "$size $(grep "Energy \[J\]" output.txt | awk '{print $5}' | awk 'NR==4')" >> ./results/energy_MM_UJB.dat
     likwid-perfctr -C ${CPU} -g FLOPS_DP -m ./matmult $size > output.txt
     echo "$size $(grep "DP \[MFLOP/s\]" output.txt | grep -v "AVX"| awk '{print $5}' | awk 'NR==1')" >> ./results/flops_MV.dat
     echo "$size $(grep "DP \[MFLOP/s\]" output.txt | grep -v "AVX"| awk '{print $5}' | awk 'NR==2')" >> ./results/flops_MM.dat
-    echo "$size $(grep "DP \[MFLOP/s\]" output.txt | grep -v "AVX"| awk '{print $5}' | awk 'NR==5')" >> ./results/flops_MV_UJB.dat
-    echo "$size $(grep "DP \[MFLOP/s\]" output.txt | grep -v "AVX"| awk '{print $5}' | awk 'NR==6')" >> ./results/flops_MM_UJB.dat
+    echo "$size $(grep "DP \[MFLOP/s\]" output.txt | grep -v "AVX"| awk '{print $5}' | awk 'NR==3')" >> ./results/flops_MV_UJB.dat
+    echo "$size $(grep "DP \[MFLOP/s\]" output.txt | grep -v "AVX"| awk '{print $5}' | awk 'NR==4')" >> ./results/flops_MM_UJB.dat
     echo "$size $(grep "AVX DP \[MFLOP/s\]" output.txt| awk '{print $6}' | awk 'NR==1')" >> ./results/flops_avx_MV.dat
     echo "$size $(grep "AVX DP \[MFLOP/s\]" output.txt| awk '{print $6}' | awk 'NR==2')" >> ./results/flops_avx_MM.dat
-    echo "$size $(grep "AVX DP \[MFLOP/s\]" output.txt| awk '{print $6}' | awk 'NR==5')" >> ./results/flops_avx_MV_UJB.dat
-    echo "$size $(grep "AVX DP \[MFLOP/s\]" output.txt| awk '{print $6}' | awk 'NR==6')" >> ./results/flops_avx_MM_UJB.dat
+    echo "$size $(grep "AVX DP \[MFLOP/s\]" output.txt| awk '{print $6}' | awk 'NR==3')" >> ./results/flops_avx_MV_UJB.dat
+    echo "$size $(grep "AVX DP \[MFLOP/s\]" output.txt| awk '{print $6}' | awk 'NR==4')" >> ./results/flops_avx_MM_UJB.dat
 done
 
 rm output.txt
