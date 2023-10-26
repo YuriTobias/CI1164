@@ -90,22 +90,6 @@ int main(int argc, char *argv[]) {
     res = geraVetor(n, 1);
     resMat = geraMatRow(n, n, 1);
 
-    // Rodando com otimização de loop unrolling
-    multMatVetTimeUJ = timestamp();
-    LIKWID_MARKER_START("multMatVetUJ");
-    multMatVetUJ(mRow_1, vet, n, n, res);
-    LIKWID_MARKER_STOP("multMatVetUJ");
-    multMatVetTimeUJ = timestamp() - multMatVetTimeUJ;
-
-    multMatMatTimeUJ = timestamp();
-    LIKWID_MARKER_START("multMatMatUJ");
-    multMatMatUJ(mRow_1, mRow_2, n, resMat);
-    LIKWID_MARKER_STOP("multMatMatUJ");
-    multMatMatTimeUJ = timestamp() - multMatMatTimeUJ;
-
-    printf("multMatVetTimeUJ: %lf\n", multMatVetTimeUJ);
-    printf("multMatMatTimeUJ: %lf\n\n", multMatMatTimeUJ);
-
     liberaVetor((void *)res);
     liberaVetor((void *)resMat);
     res = geraVetor(n, 1);

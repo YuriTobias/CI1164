@@ -16,8 +16,7 @@ set terminal png
 set ylabel  ARG1
 set output ARG2
 plot ARG3 title ARG4 with linespoints, \
-     ARG5 title ARG6 with linespoints, \
-     ARG7 title ARG8 with linespoints
+     ARG5 title ARG6 with linespoints
 replot
 unset output
 
