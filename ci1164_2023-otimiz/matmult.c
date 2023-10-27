@@ -67,7 +67,7 @@ int main(int argc, char *argv[]) {
     printf("=================================\n\n");
 #endif /* _DEBUG_ */
 
-    rtime_t multMatVetTime, multMatMatTime, multMatVetTimeUJ, multMatMatTimeUJ, multMatVetTimeUJB, multMatMatTimeUJB;
+    rtime_t multMatVetTime, multMatMatTime, multMatVetTimeUJB, multMatMatTimeUJB;
 
     // Rodando sem otimização
     multMatVetTime = timestamp();

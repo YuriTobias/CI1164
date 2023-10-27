@@ -1,14 +1,10 @@
 #!/bin/bash
 
-METRICA="FLOPS_DP"
 CPU=3
 
 LIKWID_HOME=/usr/local
 
 echo "performance" > /sys/devices/system/cpu/cpufreq/policy3/scaling_governor
-
-xe="$1"
-input="$2"
 
 sizes=(64 100 128 200 256 512 600 900 1024 2000 2048 3000 4000)
 arraySize=${#sizes[@]}

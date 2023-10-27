@@ -27,8 +27,6 @@ void liberaVetor(void *vet);
 
 void multMatVet(MatRow mat, Vetor v, int m, int n, Vetor res);
 void multMatMat(MatRow A, MatRow B, int n, MatRow C);
-void multMatVetUJ(MatRow mat, Vetor v, int m, int n, Vetor res);
-void multMatMatUJ(MatRow A, MatRow B, int n, MatRow C);
 void multMatVetUJB(MatRow mat, Vetor v, int m, int n, Vetor res);
 void multMatMatUJB(MatRow A, MatRow B, int n, MatRow C);
 
