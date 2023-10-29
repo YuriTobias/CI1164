@@ -7,7 +7,7 @@
 #define BASE 32
 
 #define UF 4
-#define BK 16
+#define BK 8
 
 #define ABS(num) ((num) < 0.0 ? -(num) : (num))
 
@@ -27,8 +27,8 @@ void liberaVetor(void *vet);
 
 void multMatVet(MatRow mat, Vetor v, int m, int n, Vetor res);
 void multMatMat(MatRow A, MatRow B, int n, MatRow C);
-void multMatVetUJB(MatRow mat, Vetor v, int m, int n, Vetor res);
-void multMatMatUJB(MatRow A, MatRow B, int n, MatRow C);
+void multMatVetUJB(restrict MatRow mat, restrict Vetor v, int m, int n, restrict Vetor res);
+void multMatMatUJB(restrict MatRow A, restrict MatRow B, int n, restrict MatRow C);
 
 void prnMat(MatRow mat, int m, int n);
 void prnVetor(Vetor vet, int n);
