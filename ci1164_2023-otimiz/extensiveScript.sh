@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CPU=3
+CPU=7
 
 LIKWID_HOME=/usr/local
 
