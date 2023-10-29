@@ -179,13 +179,13 @@ void multMatMatUJB(restrict MatRow A, restrict MatRow B, int n, restrict MatRow 
                 int kstart = kk * BK;
                 int kend = kstart + BK;
                 // Efetua a multiplicação
-                for (int i = istart; i < iend - iend % UF; i += UF) {
-                    for (int j = jstart; j < jend; ++j) {
+                for (int i = istart; i < iend; ++i) {
+                    for (int j = jstart; j < jend - jend % UF; j += UF) {
                         for (int k = kstart; k < kend; ++k) {
                             C[i * n + j] += A[i * n + k] * B[k * n + j];
-                            C[(i + 1) * n + j] += A[(i + 1) * n + k] * B[k * n + j];
-                            C[(i + 2) * n + j] += A[(i + 2) * n + k] * B[k * n + j];
-                            C[(i + 3) * n + j] += A[(i + 3) * n + k] * B[k * n + j];
+                            C[i * n + j + 1] += A[i * n + k] * B[k * n + j + 1];
+                            C[i * n + j + 2] += A[i * n + k] * B[k * n + j + 2];
+                            C[i * n + j + 3] += A[i * n + k] * B[k * n + j + 3];
                         }
                     }
                 }
