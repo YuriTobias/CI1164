@@ -11,7 +11,7 @@ int main(int argc, char *argv[]) {
     LIKWID_MARKER_INIT;
     fesetround(FE_DOWNWARD);
 
-    Interval_t **points, **coeffs, *terms, *powers, *solution, *residuals;
+    Interval_t *points, *coeffs, *terms, *powers, *solution, *residuals;
     int degree, npoints;
     double leastSquaresTs, systemSolutionTs;
 
@@ -34,8 +34,8 @@ int main(int argc, char *argv[]) {
 
     printResults(solution, residuals, npoints, degree, leastSquaresTs, systemSolutionTs);
 
-    freeIntervalMatrix(&points, npoints);
-    freeIntervalMatrix(&coeffs, degree + 1);
+    free(points);
+    free(coeffs);
     free(residuals);
     free(solution);
     free(powers);

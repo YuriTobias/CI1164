@@ -38,7 +38,7 @@ double maxDouble2(double a, double b);
  * @param size size of the system
  * @return void
  */
-void printSystem(Interval_t **coeffs, Interval_t *terms, int size);
+void printSystem(Interval_t *coeffs, Interval_t *terms, int size);
 
 /**
  * Prints a vector of points
@@ -46,7 +46,7 @@ void printSystem(Interval_t **coeffs, Interval_t *terms, int size);
  * @param size size of the vector
  * @return void
  */
-void printPoints(Interval_t **points, int size);
+void printPoints(Interval_t *points, int size);
 
 /**
  * Allocates memory for all necessary data structures related to the curves adjustment problem and initializes them with user inputs if
@@ -59,7 +59,7 @@ void printPoints(Interval_t **points, int size);
  * @param degree pointer to the degree of the polynomial to be adjusted
  * @return void
  */
-void initData(Interval_t ***points, Interval_t **powers, Interval_t ***coeffs, Interval_t **terms, int *nPoints, int *degree);
+void initData(Interval_t **points, Interval_t **powers, Interval_t **coeffs, Interval_t **terms, int *nPoints, int *degree);
 
 /**
  * Generate a linear system of equations to adjust a polynomial to a set of points
@@ -71,7 +71,7 @@ void initData(Interval_t ***points, Interval_t **powers, Interval_t ***coeffs, I
  * @param nPoints number of points
  * @return void
  */
-void leastSquaresSystem(Interval_t **points, Interval_t *powers, Interval_t **coeffs, Interval_t *terms, int degree, int nPoints);
+void leastSquaresSystem(Interval_t *points, Interval_t *powers, Interval_t *coeffs, Interval_t *terms, int degree, int nPoints);
 
 /**
  * Iterates through the lines above the pivot line to find the line with the biggest pivot
@@ -80,7 +80,7 @@ void leastSquaresSystem(Interval_t **points, Interval_t *powers, Interval_t **co
  * @param size size of the system
  * @return index of the line with the biggest pivot
  */
-int findPivotLine(Interval_t **coeffs, int i, int size);
+int findPivotLine(Interval_t *coeffs, int i, int size);
 
 /**
  * Swaps two lines of a linear system consisting of a matrix A with coefficients and a vector b with independent terms
@@ -88,9 +88,10 @@ int findPivotLine(Interval_t **coeffs, int i, int size);
  * @param terms pointer to the vector b of independent terms
  * @param i index of the first line
  * @param iPivot index of the second line
+ * @param size size of the system
  * @return void
  */
-void swapSystemLines(Interval_t **coeffs, Interval_t *terms, int i, int iPivot);
+void swapSystemLines(Interval_t *coeffs, Interval_t *terms, int i, int iPivot, int size);
 
 /**
  * Performs Gaussian elimination with partial pivoting to put a linear system in triangular form
@@ -99,7 +100,7 @@ void swapSystemLines(Interval_t **coeffs, Interval_t *terms, int i, int iPivot);
  * @param size size of the system
  * @return void
  */
-void gaussElimPivot(Interval_t **coeffs, Interval_t *terms, int size);
+void gaussElimPivot(Interval_t *coeffs, Interval_t *terms, int size);
 
 /**
  * Performs the back substitution method to solve a linear system and stores the solution in a vector x
@@ -109,7 +110,7 @@ void gaussElimPivot(Interval_t **coeffs, Interval_t *terms, int size);
  * @param size size of the system
  * @return void
  */
-void backSubstitution(Interval_t **coeffs, Interval_t *terms, Interval_t **solution, int size);
+void backSubstitution(Interval_t *coeffs, Interval_t *terms, Interval_t **solution, int size);
 
 /**
  * Calculates the residual for each equation according to the vector x of solutions
@@ -119,7 +120,7 @@ void backSubstitution(Interval_t **coeffs, Interval_t *terms, Interval_t **solut
  * @param degree degree of the polynomial
  * @param npoints number of points
  */
-void calcResidual(Interval_t **points, Interval_t *solution, Interval_t **residuals, int degree, int npoints);
+void calcResidual(Interval_t *points, Interval_t *solution, Interval_t **residuals, int degree, int npoints);
 
 /**
  * Prints the results of the program, including the solution of the system, the residuals and the execution times

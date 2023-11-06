@@ -27,21 +27,4 @@ void initInterval(char *number, Interval_t *interval);
  */
 void intervalOperation(Interval_t *operandA, Interval_t *operandB, int exp, enum OPERATIONS operation, Interval_t *result);
 
-/**
- * Allocates memory for a matrix of intervals
- * @param matrix pointer to the matrix
- * @param rows number of rows
- * @param cols number of columns
- * @return void
- */
-void mallocIntervalMatrix(Interval_t ***matrix, int rows, int cols);
-
-/**
- * Frees memory allocated for a matrix of intervals
- * @param matrix pointer to the matrix
- * @param size number of rows
- * @return void
- */
-void freeIntervalMatrix(Interval_t ***matrix, int size);
-
 #endif  // INTERVAL_OPS_H
