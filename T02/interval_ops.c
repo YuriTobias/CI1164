@@ -85,18 +85,3 @@ void intervalOperation(Interval_t *operandA, Interval_t *operandB, int exp, enum
     free(copyA);
     free(copyB);
 }
-
-// void mallocIntervalMatrix(Interval_t ***matrix, int rows, int cols) {
-//     *matrix = (Interval_t **)malloc(rows * sizeof(Interval_t *));
-//     for (int i = 0; i < rows; i++) {
-//         (*matrix)[i] = (Interval_t *)malloc(cols * sizeof(Interval_t));
-//     }
-// }
-
-// void freeIntervalMatrix(Interval_t ***matrix, int size) {
-//     for (int i = 0; i < size; i++) {
-//         free((*matrix)[i]);
-//     }
-//     free(*matrix);
-//     *matrix = NULL;
-// }

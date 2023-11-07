@@ -71,7 +71,8 @@ void initData(Interval_t **points, Interval_t **powers, Interval_t **coeffs, Int
  * @param nPoints number of points
  * @return void
  */
-void leastSquaresSystem(Interval_t *points, Interval_t *powers, Interval_t *coeffs, Interval_t *terms, int degree, int nPoints);
+void leastSquaresSystem(Interval_t *restrict points, Interval_t *restrict powers, Interval_t *restrict coeffs, Interval_t *restrict terms,
+                        int degree, int nPoints);
 
 /**
  * Iterates through the lines above the pivot line to find the line with the biggest pivot
@@ -100,7 +101,7 @@ void swapSystemLines(Interval_t *coeffs, Interval_t *terms, int i, int iPivot, i
  * @param size size of the system
  * @return void
  */
-void gaussElimPivot(Interval_t *coeffs, Interval_t *terms, int size);
+void gaussElimPivot(Interval_t *restrict coeffs, Interval_t *restrict terms, int size);
 
 /**
  * Performs the back substitution method to solve a linear system and stores the solution in a vector x
@@ -120,7 +121,7 @@ void backSubstitution(Interval_t *coeffs, Interval_t *terms, Interval_t **soluti
  * @param degree degree of the polynomial
  * @param npoints number of points
  */
-void calcResidual(Interval_t *points, Interval_t *solution, Interval_t **residuals, int degree, int npoints);
+void calcResidual(Interval_t *restrict points, Interval_t *restrict solution, Interval_t **restrict residuals, int degree, int npoints);
 
 /**
  * Prints the results of the program, including the solution of the system, the residuals and the execution times
