@@ -13,18 +13,13 @@ int main(int argc, char *argv[]) {
 
     Interval_t **points, **coeffs, *terms, *powers, *solution, *residuals;
     int degree, npoints;
-    double leastSquaresTs, systemSolutionTs;
+    double systemSolutionTs;
 
     initData(&points, &powers, &coeffs, &terms, &npoints, &degree);
 
-    LIKWID_MARKER_START("leastSquares");
-    leastSquaresTs = timestamp();
-    leastSquaresSystem(points, powers, coeffs, terms, npoints, degree);
-    leastSquaresTs = timestamp() - leastSquaresTs;
-    LIKWID_MARKER_STOP("leastSquares");
-
     LIKWID_MARKER_START("systemSolution");
     systemSolutionTs = timestamp();
+    leastSquaresSystem(points, powers, coeffs, terms, npoints, degree);
     gaussElimPivot(coeffs, terms, degree + 1);
     backSubstitution(coeffs, terms, &solution, degree + 1);
     systemSolutionTs = timestamp() - systemSolutionTs;
@@ -32,7 +27,7 @@ int main(int argc, char *argv[]) {
 
     calcResidual(points, solution, &residuals, degree, npoints);
 
-    printResults(solution, residuals, npoints, degree, leastSquaresTs, systemSolutionTs);
+    printResults(solution, residuals, npoints, degree, 0, systemSolutionTs);
 
     freeIntervalMatrix(&points, npoints);
     freeIntervalMatrix(&coeffs, degree + 1);
