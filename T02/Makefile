@@ -7,10 +7,13 @@ objects = ajustePol.o system_ops.o interval_ops.o utils.o
 
 EXECUTABLE = ajustePol
 
-all: $(EXECUTABLE)
+all: $(EXECUTABLE) geraEntrada
 
 $(EXECUTABLE): $(objects)
 	$(CC) $(objects) $(CFLAGS) -o $(EXECUTABLE) $(LFLAGS)
+
+geraEntrada: gera_entrada.c
+	$(CC) $< $(CFLAGS) -o $@
 
 ajustePol.o: ajustePol.c system_ops.h
 	$(CC) -c $< $(CFLAGS)
@@ -25,10 +28,10 @@ utils.o: utils.c utils.h
 	$(CC) -c $< $(CFLAGS)
 
 clean:
-	-rm -f $(objects) 
+	-rm -f $(objects)  
 
 purge: clean
-	-rm -f $(EXECUTABLE)
+	-rm -f $(EXECUTABLE) geraEntrada
 
 clear:
 	clear
