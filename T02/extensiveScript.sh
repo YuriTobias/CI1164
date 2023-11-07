@@ -32,7 +32,11 @@ done
 rm output.txt
 
 echo "Generating plots"
-# gnuplot -c plot.gp "Time" "results/time_MV.png" "results/time_MV.dat" "MatVet" > /dev/null 2>&1
+gnuplot -c plot.gp "Time" "results/time_O.png" "results/time_O.dat" "Optimized" > /dev/null 2>&1
+gnuplot -c plot.gp "Flops" "results/flops_O.png" "results/flops_O.dat" "Optimized" > /dev/null 2>&1
+gnuplot -c plot.gp "Flops" "results/flops_avx_O.png" "results/flops_avx_O.dat" "Optimized" > /dev/null 2>&1
+gnuplot -c plot.gp "Bandwidth" "results/bandwidth_O.png" "results/bandwidth_O.dat" "Optimized" > /dev/null 2>&1
+gnuplot -c plot.gp "L2 Miss Ratio" "results/missl2_O.png" "results/missl2_O.dat" "Optimized" > /dev/null 2>&1
 
 echo "Removing temporary files"
 # rm results/*.dat
