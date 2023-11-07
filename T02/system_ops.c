@@ -89,7 +89,7 @@ void leastSquaresSystem(Interval_t *restrict points, Interval_t *restrict powers
             intervalOperation(aux, &(powers)[i + 3], 0, SUM, &(powers)[i + 3]);  // powers[i + 3] += points[j][0] ^ (i + 3)
         }
     }
-    // Remaider loop
+    // Remainder loop
     for (int i = (degree + degree) - (degree + degree) % UF; i <= (degree + degree); i++) {
         initInterval("0", &(powers)[i]);
         for (int j = 0; j < k; j++) {
@@ -115,7 +115,7 @@ void leastSquaresSystem(Interval_t *restrict points, Interval_t *restrict powers
             intervalOperation(aux, &(points)[2 * j + 1], 0, MULT, aux);        // points[j][0] ^ (i + 3) * points[j][1]
         }
     }
-    // Remaider loop
+    // Remainder loop
     for (int i = degree - degree % UF; i <= degree; i++) {
         initInterval("0", &(terms)[i]);
         for (int j = 0; j < k; j++) {
@@ -133,7 +133,7 @@ void leastSquaresSystem(Interval_t *restrict points, Interval_t *restrict powers
             memcpy(&(coeffs)[i * (degree + 1) + j + 2], &(powers)[i + j + 2], sizeof(Interval_t));
             memcpy(&(coeffs)[i * (degree + 1) + j + 3], &(powers)[i + j + 3], sizeof(Interval_t));
         }
-        // Remaider loop
+        // Remainder loop
         for (int j = degree - degree % UF; j <= degree; j++) {
             memcpy(&(coeffs)[i * (degree + 1) + j], &(powers)[i + j], sizeof(Interval_t));  // coeffs[i][j] = powers[i + j]
         }
@@ -186,7 +186,7 @@ void gaussElimPivot(Interval_t *restrict coeffs, Interval_t *restrict terms, int
                 intervalOperation(&m, &(coeffs)[i * (size) + j + 3], 0, MULT, &result4);  // result = m * A[i][j + 3]
                 intervalOperation(&(coeffs)[k * (size) + j + 3], &result4, 0, SUB, &(coeffs)[k * (size) + j + 3]);  // A[k][j+3] -= result4
             }
-            // Remaider loop
+            // Remainder loop
             for (int j = size - size % UF; j < size; j++) {
                 intervalOperation(&m, &(coeffs)[i * (size) + j], 0, MULT, &result);                        // result = m * A[i][j]
                 intervalOperation(&(coeffs)[k * (size) + j], &result, 0, SUB, &(coeffs)[k * (size) + j]);  // A[k][j] -= result
@@ -236,7 +236,7 @@ void calcResidual(Interval_t *restrict points, Interval_t *restrict solution, In
         intervalOperation(&(points)[2 * (i + 2) + 1], &result3, 0, SUB, &(*residuals)[i + 2]);
         intervalOperation(&(points)[2 * (i + 3) + 1], &result4, 0, SUB, &(*residuals)[i + 3]);
     }
-    // Remaider loop
+    // Remainder loop
     for (int i = npoints - npoints % UF; i < npoints; i++) {
         initInterval("0", &result);
         for (int j = 0; j <= degree; j++) {
@@ -257,6 +257,6 @@ void printResults(Interval_t *solution, Interval_t *residuals, int npoints, int 
         printf("[%.8e , %.8e] ", residuals[i].lower, residuals[i].upper);
     }
     printf("\n");
-    printf("%.8e\n", leastSquaresTs);
-    printf("%.8e\n", systemSolutionTs);
+    // printf("%.8e\n", leastSquaresTs);
+    printf("OpTime: %.8e\n", systemSolutionTs);
 }

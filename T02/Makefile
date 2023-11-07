@@ -1,5 +1,5 @@
 LIKWID_HOME = /usr/local
-CFLAGS = -lm -Wall -g -I$(LIKWID_HOME)/include -DLIKWID_PERFMON -O3 -mavx -march=native
+CFLAGS = -lm -Wall -g -I$(LIKWID_HOME)/include -DLIKWID_PERFMON -O3 -mavx -march=native -fopt-info-vec-optimized 
 LFLAGS = -L$(LIKWID_HOME)/lib -llikwid
 CC = gcc
 
