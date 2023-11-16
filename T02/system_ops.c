@@ -188,7 +188,13 @@ void gaussElimPivot(Interval_t *restrict coeffs, Interval_t *restrict terms, int
         for (int k = i + 1; k < size; k++) {
             intervalOperation(&(coeffs)[k * (size) + i], &(coeffs)[i * (size) + i], 0, DIV, &m);  // m = A[k][i] / A[i][i]
             initInterval("0", &(coeffs)[k * (size) + i]);                                         // A[k][i] = 0
-            for (int j = i + 1; j < size - size % UF; j += UF) {
+            // Remainder loop
+            for (int j = i + 1; j < (i + 1) - ((i + 1) % UF) + UF && j < size - size % UF; j++) {
+                intervalOperation(&m, &(coeffs)[i * (size) + j], 0, MULT, &result);                        // result = m * A[i][j]
+                intervalOperation(&(coeffs)[k * (size) + j], &result, 0, SUB, &(coeffs)[k * (size) + j]);  // A[k][j] -= result
+            }
+            // Unrolled on j
+            for (int j = (i + 1) - ((i + 1) % UF) + UF; j < size - size % UF; j += UF) {
                 intervalOperation(&m, &(coeffs)[i * (size) + j], 0, MULT, &result);                        // result = m * A[i][j]
                 intervalOperation(&(coeffs)[k * (size) + j], &result, 0, SUB, &(coeffs)[k * (size) + j]);  // A[k][j] -= result
                 intervalOperation(&m, &(coeffs)[i * (size) + j + 1], 0, MULT, &result2);                   // result = m * A[i][j + 1]
