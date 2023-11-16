@@ -8,6 +8,11 @@ typedef struct {
     double upper;
 } Interval_t;
 
+typedef struct {
+    Interval_t *x;
+    Interval_t *y;
+} Point_t;
+
 /**
  * Processes a string with a number to obtain the smallest interval between two doubles that contain that value
  * @param number string with the number

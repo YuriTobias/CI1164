@@ -11,16 +11,16 @@ int main(int argc, char *argv[]) {
     LIKWID_MARKER_INIT;
     fesetround(FE_DOWNWARD);
 
-    Interval_t *points, *coeffs, *terms, *powers, *solution, *residuals;
+    Point_t points;
+    Interval_t *coeffs = NULL, *terms = NULL, *powers = NULL, *solution, *residuals;
     int degree, npoints;
     double systemSolutionTs;
 
     initData(&points, &powers, &coeffs, &terms, &npoints, &degree);
-
+    
     LIKWID_MARKER_START("systemSolution");
     systemSolutionTs = timestamp();
     leastSquaresSystem(points, powers, coeffs, terms, npoints, degree);
-
     gaussElimPivot(coeffs, terms, degree + 1);
     backSubstitution(coeffs, terms, &solution, degree + 1);
     systemSolutionTs = timestamp() - systemSolutionTs;
@@ -30,7 +30,8 @@ int main(int argc, char *argv[]) {
 
     printResults(solution, residuals, npoints, degree, 0, systemSolutionTs);
 
-    free(points);
+    free(points.x);
+    free(points.y);   
     free(coeffs);
     free(residuals);
     free(solution);

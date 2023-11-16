@@ -59,7 +59,7 @@ void printPoints(Interval_t *points, int size);
  * @param degree pointer to the degree of the polynomial to be adjusted
  * @return void
  */
-void initData(Interval_t **points, Interval_t **powers, Interval_t **coeffs, Interval_t **terms, int *nPoints, int *degree);
+void initData(Point_t *points, Interval_t **powers, Interval_t **coeffs, Interval_t **terms, int *nPoints, int *degree);
 
 /**
  * Generate a linear system of equations to adjust a polynomial to a set of points
@@ -71,8 +71,8 @@ void initData(Interval_t **points, Interval_t **powers, Interval_t **coeffs, Int
  * @param nPoints number of points
  * @return void
  */
-void leastSquaresSystem(Interval_t *restrict points, Interval_t *restrict powers, Interval_t *restrict coeffs, Interval_t *restrict terms,
-                        int degree, int nPoints);
+void leastSquaresSystem(Point_t points, Interval_t *restrict powers, Interval_t *restrict coeffs, Interval_t *restrict terms,
+                        int k, int degree);
 
 /**
  * Iterates through the lines above the pivot line to find the line with the biggest pivot
@@ -121,7 +121,7 @@ void backSubstitution(Interval_t *coeffs, Interval_t *terms, Interval_t **soluti
  * @param degree degree of the polynomial
  * @param npoints number of points
  */
-void calcResidual(Interval_t *restrict points, Interval_t *restrict solution, Interval_t **restrict residuals, int degree, int npoints);
+void calcResidual(Point_t points, Interval_t *restrict solution, Interval_t **restrict residuals, int degree, int npoints);
 
 /**
  * Prints the results of the program, including the solution of the system, the residuals and the execution times

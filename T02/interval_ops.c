@@ -8,7 +8,7 @@
 
 #include "system_ops.h"
 
-void initInterval(char *number, Interval_t *interval) {
+inline void initInterval(char *number, Interval_t *interval) {
     fesetround(FE_DOWNWARD);
     interval->lower = atof(number);
     fesetround(FE_UPWARD);
