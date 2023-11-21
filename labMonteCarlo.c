@@ -35,19 +35,20 @@ double styblinskiTang(double a, double b, long long int namostras) {
 }
 
 double retangulos_xy(double a, double b, long long int npontos) {
-    double h = (b - a) / npontos;
+    long long int dim = ceil(sqrt(npontos));
+    double h = (b - a) / dim;
     double resultado;
     double soma = 0;
     double x = a, y;
 
     printf("Metodo dos Retangulos (x, y).\n");
-    printf("a = (%f), b = (%f), n = (%lld), h = (%lg)\n", a, b, npontos, h);
+    printf("a = (%f), b = (%f), n = (%lld), h = (%lg)\n", a, b, dim * dim, h);
 
     double t_inicial = timestamp();
 
-    for (long long int i = 0; i <= npontos; i++) {
+    for (long long int i = 0; i <= dim; i++) {
         y = a;
-        for (long long int j = 0; j <= npontos; j++) {
+        for (long long int j = 0; j <= dim; j++) {
             soma += (x * x * x * x - 16 * x * x + 5 * x + y * y * y * y - 16 * y * y + 5 * y);
             y += h;
         }
