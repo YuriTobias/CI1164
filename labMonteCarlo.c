@@ -38,7 +38,7 @@ double retangulos_xy(double a, double b, long long int npontos) {
     double h = (b - a) / npontos;
     double resultado;
     double soma = 0;
-    double x, y;
+    double x = a, y;
 
     printf("Metodo dos Retangulos (x, y).\n");
     printf("a = (%f), b = (%f), n = (%lld), h = (%lg)\n", a, b, npontos, h);
@@ -46,13 +46,14 @@ double retangulos_xy(double a, double b, long long int npontos) {
     double t_inicial = timestamp();
 
     for (long long int i = 0; i <= npontos; i++) {
+        y = a;
         for (long long int j = 0; j <= npontos; j++) {
-            x = a + i * h;
-            y = a + j * h;
-            soma += h * h * (x * x * x * x - 16 * x * x + 5 * x + y * y * y * y - 16 * y * y + 5 * y) / 2;
+            soma += (x * x * x * x - 16 * x * x + 5 * x + y * y * y * y - 16 * y * y + 5 * y);
+            y += h;
         }
+        x += h;
     }
-    resultado = soma;
+    resultado = soma * h * h / 2;
 
     double t_final = timestamp();
     printf("Tempo decorrido: %f seg.\n", t_final - t_inicial);
