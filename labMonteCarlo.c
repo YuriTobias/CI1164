@@ -10,16 +10,16 @@
 #define SRAND(a) srand(a)                  // srand48(a)
 
 // Integral Monte Carlo da função Styblinski-Tang de 2 variáveis
-double styblinskiTang(double a, double b, int namostras) {
+double styblinskiTang(double a, double b, long long int namostras) {
     double resultado;
     double soma = 0.0;
 
     printf("Metodo de Monte Carlo (x, y).\n");
-    printf("a = (%f), b = (%f), n = (%d), variaveis = 2\n", a, b, namostras);
+    printf("a = (%f), b = (%f), n = (%lld), variaveis = 2\n", a, b, namostras);
 
     double t_inicial = timestamp();
 
-    for (int i = 0; i < namostras; i++) {
+    for (long long int i = 0; i < namostras; i++) {
         double x[2];
         for (int j = 0; j < 2; j++) {
             x[j] = ((double)rand() / RAND_MAX) * (b - a) + a;
@@ -34,20 +34,21 @@ double styblinskiTang(double a, double b, int namostras) {
     return resultado;
 }
 
-double retangulos_xy(double a, double b, int npontos) {
+double retangulos_xy(double a, double b, long long int npontos) {
     double h = (b - a) / npontos;
     double resultado;
     double soma = 0;
+    double x, y;
 
     printf("Metodo dos Retangulos (x, y).\n");
-    printf("a = (%f), b = (%f), n = (%d), h = (%lg)\n", a, b, npontos, h);
+    printf("a = (%f), b = (%f), n = (%lld), h = (%lg)\n", a, b, npontos, h);
 
     double t_inicial = timestamp();
 
-    for (double i = 0; i <= npontos; i++) {
-        for (double j = 0; j <= npontos; j++) {
-            double x = a + i * h;
-            double y = a + j * h;
+    for (long long int i = 0; i <= npontos; i++) {
+        for (long long int j = 0; j <= npontos; j++) {
+            x = a + i * h;
+            y = a + j * h;
             soma += h * h * (x * x * x * x - 16 * x * x + 5 * x + y * y * y * y - 16 * y * y + 5 * y) / 2;
         }
     }
@@ -68,9 +69,9 @@ int main(int argc, char **argv) {
     srand(20232);
 
     double resultado;
-    resultado = styblinskiTang(atof(argv[1]), atof(argv[2]), atoi(argv[3]));
+    resultado = styblinskiTang(atoi(argv[1]), atof(argv[2]), atoll(argv[3]));
     printf("Resultado: %f\n", resultado);
-    resultado = retangulos_xy(atof(argv[1]), atof(argv[2]), atoi(argv[4]));
+    resultado = retangulos_xy(atof(argv[1]), atof(argv[2]), atoll(argv[4]));
     printf("Resultado: %f\n", resultado);
 
     return 0;
