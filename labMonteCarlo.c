@@ -92,7 +92,7 @@ double retangulos_xy(double a, double b, long long int npontos) {
     long long int dim = ceil(sqrt(npontos));
     double h = (b - a) / dim;
     double resultado;
-    double soma = 0;
+    double soma = 0, somaX, x2, y2;
     double x = a, y;
 
     printf("Metodo dos Retangulos (x, y).\n");
@@ -102,8 +102,11 @@ double retangulos_xy(double a, double b, long long int npontos) {
 
     for (long long int i = 0; i <= dim; i++) {
         y = a;
+        x2 = x * x;
+        somaX = x2 * x2 - 16 * x2 + 5 * x;
         for (long long int j = 0; j <= dim; j++) {
-            soma += (x * x * x * x - 16 * x * x + 5 * x + y * y * y * y - 16 * y * y + 5 * y);
+            y2 = y * y;
+            soma += (somaX + y2 * y2 - 16 * y2 + 5 * y);
             y += h;
         }
         x += h;
