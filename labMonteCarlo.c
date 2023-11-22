@@ -11,7 +11,7 @@
 
 // Integral Monte Carlo da função Styblinski-Tang de 2 variáveis
 double styblinskiTang2(double a, double b, long long int namostras) {
-    double resultado;
+    double resultado, x2[2];
     double soma = 0.0;
 
     printf("Metodo de Monte Carlo (x, y).\n");
@@ -21,10 +21,11 @@ double styblinskiTang2(double a, double b, long long int namostras) {
 
     for (long long int i = 0; i < namostras; i++) {
         double x[2];
-        for (int j = 0; j < 2; j++) {
-            x[j] = ((double)rand() / RAND_MAX) * (b - a) + a;
-        }
-        soma += (x[0] * x[0] * x[0] * x[0] - 16 * x[0] * x[0] + 5 * x[0] + x[1] * x[1] * x[1] * x[1] - 16 * x[1] * x[1] + 5 * x[1]);
+        x[0] = ((double)rand() / RAND_MAX) * (b - a) + a;
+        x[1] = ((double)rand() / RAND_MAX) * (b - a) + a;
+        x2[0] = x[0] * x[0];
+        x2[1] = x[1] * x[1];
+        soma += (x2[0] * x2[0] - 16 * x2[0] + 5 * x[0] + x2[1] * x2[1] - 16 * x2[1] + 5 * x[1]);
     }
     resultado = (b - a) * (b - a) * soma / (namostras * 2);
 
@@ -36,7 +37,7 @@ double styblinskiTang2(double a, double b, long long int namostras) {
 
 // Integral Monte Carlo da função Styblinski-Tang de 4 variáveis
 double styblinskiTang4(double a, double b, long long int namostras) {
-    double resultado;
+    double resultado, ba2, x2[4];
     double soma = 0.0;
 
     printf("Metodo de Monte Carlo (x, y).\n");
@@ -46,13 +47,19 @@ double styblinskiTang4(double a, double b, long long int namostras) {
 
     for (long long int i = 0; i < namostras; i++) {
         double x[4];
-        for (int j = 0; j < 4; j++) {
-            x[j] = ((double)rand() / RAND_MAX) * (b - a) + a;
-        }
-        soma += (x[0] * x[0] * x[0] * x[0] - 16 * x[0] * x[0] + 5 * x[0] + x[1] * x[1] * x[1] * x[1] - 16 * x[1] * x[1] + 5 * x[1] +
-                 x[2] * x[2] * x[2] * x[2] - 16 * x[2] * x[2] + 5 * x[2] + x[3] * x[3] * x[3] * x[3] - 16 * x[3] * x[3] + 5 * x[3]);
+        x[0] = ((double)rand() / RAND_MAX) * (b - a) + a;
+        x[1] = ((double)rand() / RAND_MAX) * (b - a) + a;
+        x[2] = ((double)rand() / RAND_MAX) * (b - a) + a;
+        x[3] = ((double)rand() / RAND_MAX) * (b - a) + a;
+        x2[0] = x[0] * x[0];
+        x2[1] = x[1] * x[1];
+        x2[2] = x[2] * x[2];
+        x2[3] = x[3] * x[3];
+        soma += (x2[0] * x2[0] - 16 * x2[0] + 5 * x[0] + x2[1] * x2[1] - 16 * x2[1] + 5 * x[1] +
+                 x2[2] * x2[2] - 16 * x2[2] + 5 * x[2] + x2[3] * x2[3] - 16 * x2[3] + 5 * x[3]);
     }
-    resultado = (b - a) * (b - a) * (b - a) * (b - a) * soma / (namostras * 2);
+    ba2 = (b - a) * (b - a);
+    resultado = ba2 * ba2 * soma / (namostras * 2);
 
     double t_final = timestamp();
     printf("Tempo decorrido: %f seg.\n", t_final - t_inicial);
@@ -62,7 +69,7 @@ double styblinskiTang4(double a, double b, long long int namostras) {
 
 // Integral Monte Carlo da função Styblinski-Tang de 8 variáveis
 double styblinskiTang8(double a, double b, long long int namostras) {
-    double resultado;
+    double resultado, ba2, x2[8];
     double soma = 0.0;
 
     printf("Metodo de Monte Carlo (x, y).\n");
@@ -72,15 +79,29 @@ double styblinskiTang8(double a, double b, long long int namostras) {
 
     for (long long int i = 0; i < namostras; i++) {
         double x[8];
-        for (int j = 0; j < 8; j++) {
-            x[j] = ((double)rand() / RAND_MAX) * (b - a) + a;
-        }
-        soma += (x[0] * x[0] * x[0] * x[0] - 16 * x[0] * x[0] + 5 * x[0] + x[1] * x[1] * x[1] * x[1] - 16 * x[1] * x[1] + 5 * x[1] +
-                 x[2] * x[2] * x[2] * x[2] - 16 * x[2] * x[2] + 5 * x[2] + x[3] * x[3] * x[3] * x[3] - 16 * x[3] * x[3] + 5 * x[3] +
-                 x[4] * x[4] * x[4] * x[4] - 16 * x[4] * x[4] + 5 * x[4] + x[5] * x[5] * x[5] * x[5] - 16 * x[5] * x[5] + 5 * x[5] +
-                 x[6] * x[6] * x[6] * x[6] - 16 * x[6] * x[6] + 5 * x[6] + x[7] * x[7] * x[7] * x[7] - 16 * x[7] * x[7] + 5 * x[7]);
+        x[0] = ((double)rand() / RAND_MAX) * (b - a) + a;
+        x[1] = ((double)rand() / RAND_MAX) * (b - a) + a;
+        x[2] = ((double)rand() / RAND_MAX) * (b - a) + a;
+        x[3] = ((double)rand() / RAND_MAX) * (b - a) + a;
+        x[4] = ((double)rand() / RAND_MAX) * (b - a) + a;
+        x[5] = ((double)rand() / RAND_MAX) * (b - a) + a;
+        x[6] = ((double)rand() / RAND_MAX) * (b - a) + a;
+        x[7] = ((double)rand() / RAND_MAX) * (b - a) + a;
+        x2[0] = x[0] * x[0];
+        x2[1] = x[1] * x[1];
+        x2[2] = x[2] * x[2];
+        x2[3] = x[3] * x[3];
+        x2[4] = x[4] * x[4];
+        x2[5] = x[5] * x[5];
+        x2[6] = x[6] * x[6];
+        x2[7] = x[7] * x[7];
+        soma += (x2[0] * x2[0] - 16 * x2[0] + 5 * x[0] + x2[1] * x2[1] - 16 * x2[1] + 5 * x[1] +
+                 x2[2] * x2[2] - 16 * x2[2] + 5 * x[2] + x2[3] * x2[3] - 16 * x2[3] + 5 * x[3] +
+                 x2[4] * x2[4] - 16 * x2[4] + 5 * x[4] + x2[5] * x2[5] - 16 * x2[5] + 5 * x[5] +
+                 x2[6] * x2[6] - 16 * x2[6] + 5 * x[6] + x2[7] * x2[7] - 16 * x2[7] + 5 * x[7]);
     }
-    resultado = (b - a) * (b - a) * (b - a) * (b - a) * (b - a) * (b - a) * (b - a) * (b - a) * soma / (namostras * 2);
+    ba2 = (b - a) * (b - a);
+    resultado = ba2 * ba2 * ba2 * ba2 * soma / (namostras * 2);
 
     double t_final = timestamp();
     printf("Tempo decorrido: %f seg.\n", t_final - t_inicial);
