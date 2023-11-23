@@ -1,13 +1,14 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include "utils.h"
 
 #define DIFF 0.0
 
-#define NRAND ((double)rand() / RAND_MAX)  // drand48()
-#define SRAND(a) srand(a)                  // srand48(a)
+#define NRAND ((double)random() / RAND_MAX)  // drand48()
+#define SRAND(a) srandom(a)                  // srand48(a)
 
 // Integral Monte Carlo da função Styblinski-Tang de 2 variáveis
 double styblinskiTang2(double a, double b, long long int namostras) {
@@ -21,8 +22,8 @@ double styblinskiTang2(double a, double b, long long int namostras) {
 
     for (long long int i = 0; i < namostras; i++) {
         double x[2];
-        x[0] = ((double)rand() / RAND_MAX) * (b - a) + a;
-        x[1] = ((double)rand() / RAND_MAX) * (b - a) + a;
+        x[0] = ((double)random() / RAND_MAX) * (b - a) + a;
+        x[1] = ((double)random() / RAND_MAX) * (b - a) + a;
         x2[0] = x[0] * x[0];
         x2[1] = x[1] * x[1];
         soma += (x2[0] * x2[0] - 16 * x2[0] + 5 * x[0] + x2[1] * x2[1] - 16 * x2[1] + 5 * x[1]);
@@ -47,10 +48,10 @@ double styblinskiTang4(double a, double b, long long int namostras) {
 
     for (long long int i = 0; i < namostras; i++) {
         double x[4];
-        x[0] = ((double)rand() / RAND_MAX) * (b - a) + a;
-        x[1] = ((double)rand() / RAND_MAX) * (b - a) + a;
-        x[2] = ((double)rand() / RAND_MAX) * (b - a) + a;
-        x[3] = ((double)rand() / RAND_MAX) * (b - a) + a;
+        x[0] = ((double)random() / RAND_MAX) * (b - a) + a;
+        x[1] = ((double)random() / RAND_MAX) * (b - a) + a;
+        x[2] = ((double)random() / RAND_MAX) * (b - a) + a;
+        x[3] = ((double)random() / RAND_MAX) * (b - a) + a;
         x2[0] = x[0] * x[0];
         x2[1] = x[1] * x[1];
         x2[2] = x[2] * x[2];
@@ -79,14 +80,14 @@ double styblinskiTang8(double a, double b, long long int namostras) {
 
     for (long long int i = 0; i < namostras; i++) {
         double x[8];
-        x[0] = ((double)rand() / RAND_MAX) * (b - a) + a;
-        x[1] = ((double)rand() / RAND_MAX) * (b - a) + a;
-        x[2] = ((double)rand() / RAND_MAX) * (b - a) + a;
-        x[3] = ((double)rand() / RAND_MAX) * (b - a) + a;
-        x[4] = ((double)rand() / RAND_MAX) * (b - a) + a;
-        x[5] = ((double)rand() / RAND_MAX) * (b - a) + a;
-        x[6] = ((double)rand() / RAND_MAX) * (b - a) + a;
-        x[7] = ((double)rand() / RAND_MAX) * (b - a) + a;
+        x[0] = ((double)random() / RAND_MAX) * (b - a) + a;
+        x[1] = ((double)random() / RAND_MAX) * (b - a) + a;
+        x[2] = ((double)random() / RAND_MAX) * (b - a) + a;
+        x[3] = ((double)random() / RAND_MAX) * (b - a) + a;
+        x[4] = ((double)random() / RAND_MAX) * (b - a) + a;
+        x[5] = ((double)random() / RAND_MAX) * (b - a) + a;
+        x[6] = ((double)random() / RAND_MAX) * (b - a) + a;
+        x[7] = ((double)random() / RAND_MAX) * (b - a) + a;
         x2[0] = x[0] * x[0];
         x2[1] = x[1] * x[1];
         x2[2] = x[2] * x[2];
@@ -146,7 +147,7 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    srand(20232);
+    srandom(20232);
 
     double resultado;
     resultado = styblinskiTang2(atoi(argv[1]), atof(argv[2]), atoll(argv[3]));
