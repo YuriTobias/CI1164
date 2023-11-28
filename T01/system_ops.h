@@ -129,8 +129,10 @@ void calcResidual(Interval_t **points, Interval_t *solution, Interval_t **residu
  * @param degree degree of the polynomial
  * @param leastSquaresTs execution time of the least squares method
  * @param systemSolutionTs execution time of the system solution method (Gaussian elimination with partial pivoting and back substitution)
+ * @param residualSolTs execution time of the residual calculation method
  * @return void
  */
-void printResults(Interval_t *solution, Interval_t *residuals, int npoints, int degree, double leastSquaresTs, double systemSolutionTs);
+void printResults(Interval_t *solution, Interval_t *residuals, int npoints, int degree, double leastSquaresTs, double systemSolutionTs,
+                  double residualSolTs);
 
 #endif  // SYSTEM_OPS_H
