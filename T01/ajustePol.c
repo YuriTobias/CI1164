@@ -13,21 +13,27 @@ int main(int argc, char *argv[]) {
 
     Interval_t **points, **coeffs, *terms, *powers, *solution, *residuals;
     int degree, npoints;
-    double systemSolutionTs;
+    double leastSquaresTs, systemSolTs, residualSolTs;
 
     initData(&points, &powers, &coeffs, &terms, &npoints, &degree);
 
-    LIKWID_MARKER_START("systemSolution");
-    systemSolutionTs = timestamp();
+    LIKWID_MARKER_START("leastSquaresTs");
+    leastSquaresTs = timestamp();
     leastSquaresSystem(points, powers, coeffs, terms, npoints, degree);
+    leastSquaresTs = timestamp() - leastSquaresTs;
+    LIKWID_MARKER_STOP("leastSquaresTs");
+    LIKWID_MARKER_START("systemSolTs");
+    systemSolTs = timestamp();
     gaussElimPivot(coeffs, terms, degree + 1);
     backSubstitution(coeffs, terms, &solution, degree + 1);
-    systemSolutionTs = timestamp() - systemSolutionTs;
-    LIKWID_MARKER_STOP("systemSolution");
-
+    systemSolTs = timestamp() - systemSolTs;
+    LIKWID_MARKER_STOP("systemSolTs");
+    LIKWID_MARKER_START("residualSolTs");
+    residualSolTs = timestamp();
     calcResidual(points, solution, &residuals, degree, npoints);
-
-    printResults(solution, residuals, npoints, degree, 0, systemSolutionTs);
+    residualSolTs = timestamp() - residualSolTs;
+    LIKWID_MARKER_STOP("residualSolTs");
+    printResults(solution, residuals, npoints, degree, leastSquaresTs, systemSolTs, residualSolTs);
 
     freeIntervalMatrix(&points, npoints);
     freeIntervalMatrix(&coeffs, degree + 1);

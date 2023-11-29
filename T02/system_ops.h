@@ -71,8 +71,8 @@ void initData(Point_t *points, Interval_t **powers, Interval_t **coeffs, Interva
  * @param nPoints number of points
  * @return void
  */
-void leastSquaresSystem(Point_t points, Interval_t *restrict powers, Interval_t *restrict coeffs, Interval_t *restrict terms,
-                        int k, int degree);
+void leastSquaresSystem(Point_t points, Interval_t *restrict powers, Interval_t *restrict coeffs, Interval_t *restrict terms, int k,
+                        int degree);
 
 /**
  * Iterates through the lines above the pivot line to find the line with the biggest pivot
@@ -131,8 +131,10 @@ void calcResidual(Point_t points, Interval_t *restrict solution, Interval_t **re
  * @param degree degree of the polynomial
  * @param leastSquaresTs execution time of the least squares method
  * @param systemSolutionTs execution time of the system solution method (Gaussian elimination with partial pivoting and back substitution)
+ * @param residualSolTs execution time of the residual solution method
  * @return void
  */
-void printResults(Interval_t *solution, Interval_t *residuals, int npoints, int degree, double leastSquaresTs, double systemSolutionTs);
+void printResults(Interval_t *solution, Interval_t *residuals, int npoints, int degree, double leastSquaresTs, double systemSolutionTs,
+                  double residualSolTs);
 
 #endif  // SYSTEM_OPS_H

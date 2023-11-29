@@ -293,7 +293,8 @@ void calcResidual(Point_t points, Interval_t *restrict solution, Interval_t **re
     }
 }
 
-void printResults(Interval_t *solution, Interval_t *residuals, int npoints, int degree, double leastSquaresTs, double systemSolutionTs) {
+void printResults(Interval_t *solution, Interval_t *residuals, int npoints, int degree, double leastSquaresTs, double systemSolutionTs,
+                  double residualTs) {
     for (int i = 0; i <= degree; i++) {
         printf("[%.8e , %.8e] ", solution[i].lower, solution[i].upper);
     }
@@ -302,6 +303,7 @@ void printResults(Interval_t *solution, Interval_t *residuals, int npoints, int 
         printf("[%.8e , %.8e] ", residuals[i].lower, residuals[i].upper);
     }
     printf("\n");
-    // printf("%.8e\n", leastSquaresTs);
-    printf("OpTime: %.8e\n", systemSolutionTs);
+    printf("LeastSquares: %.8e\n", leastSquaresTs);
+    printf("SystemSol: %.8e\n", systemSolutionTs);
+    printf("ResidualSol: %.8e\n", residualTs);
 }
