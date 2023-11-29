@@ -77,11 +77,11 @@ void leastSquaresSystem(Point_t points, Interval_t *restrict powers, Interval_t 
     Interval_t aux[UF], auxB[UF];
     int coeffsIndex, powersIndex;
 
-    for (int i = 0; i < degree; i++) {
+    for (int i = 0; i <= degree; i++) {
         initInterval("0", &terms[i]);
         initInterval("0", &powers[i]);
     }
-    for(int i = degree; i < degree + degree; i++) {
+    for(int i = degree + 1; i <= degree + degree; i++) {
         initInterval("0", &powers[i]);
     }
 
@@ -98,7 +98,7 @@ void leastSquaresSystem(Point_t points, Interval_t *restrict powers, Interval_t 
         aux[2].upper = 1.0;
         aux[3].lower = 1.0;
         aux[3].upper = 1.0;
-        for(int j = 1; j < degree; j++) {
+        for(int j = 1; j <= degree; j++) {
             // --
             intervalOperation(&(points.x[i]), &aux[0], 0, MULT, &aux[0]);
             intervalOperation(&aux[0], &(powers)[j], 0, SUM, &(powers)[j]);
@@ -120,7 +120,7 @@ void leastSquaresSystem(Point_t points, Interval_t *restrict powers, Interval_t 
             intervalOperation(&(points.y[i + 3]), &aux[3], 0, MULT, &auxB[3]);
             intervalOperation(&(terms)[j], &auxB[3], 0, SUM, &(terms)[j]);
         }
-        for(int j = degree; j < degree + degree; j++) {
+        for(int j = degree + 1; j <= degree + degree; j++) {
             intervalOperation(&(points.x[i]), &aux[0], 0, MULT, &aux[0]);
             intervalOperation(&aux[0], &(powers)[j], 0, SUM, &(powers)[j]);
             // --
@@ -138,13 +138,13 @@ void leastSquaresSystem(Point_t points, Interval_t *restrict powers, Interval_t 
     for(int i = k - k % UF; i < k; i++) {
         aux[0].lower = 1.0;
         aux[0].upper = 1.0;
-        for(int j = 1; j < degree; j++) {
+        for(int j = 1; j <= degree; j++) {
             intervalOperation(&(points.x[i]), &aux[0], 0, MULT, &aux[0]);
             intervalOperation(&aux[0], &(powers)[j], 0, SUM, &(powers)[j]);
             intervalOperation(&(points.y[i]), &aux[0], 0, MULT, &auxB[0]);
             intervalOperation(&(terms)[j], &auxB[0], 0, SUM, &(terms)[j]);
         }
-        for(int j = degree; j < degree + degree; j++) {
+        for(int j = degree + 1; j <= degree + degree; j++) {
             intervalOperation(&(points.x[i]), &aux[0], 0, MULT, &aux[0]);
             intervalOperation(&aux[0], &(powers)[j], 0, SUM, &(powers)[j]);
         }
@@ -167,18 +167,13 @@ void leastSquaresSystem(Point_t points, Interval_t *restrict powers, Interval_t 
     //         memcpy(&(coeffs)[i * degree + j], &(coeffs)[(i - 1) * degree + j + 1], sizeof(Interval_t));
     //     }
     // }
-    for (int i = 0; i < degree; i++) {
-        for (int j = 0; j < degree - degree % UF; j+=UF) {
-            coeffsIndex = i * degree + j;
+    for (int i = 0; i <= degree; i++) {
+        for (int j = 0; j <= degree; j++) {
+            coeffsIndex = i * (degree + 1) + j;
             powersIndex = i + j;
+            // coeffs[coeffsIndex].lower = powers[powersIndex].lower;
+            // coeffs[coeffsIndex].upper = powers[powersIndex].upper;
             memcpy(&(coeffs)[coeffsIndex], &(powers)[powersIndex], sizeof(Interval_t));  // coeffs[i][j] = powers[i + j]
-            memcpy(&(coeffs)[coeffsIndex + 1], &(powers)[powersIndex + 1], sizeof(Interval_t));
-            memcpy(&(coeffs)[coeffsIndex + 2], &(powers)[powersIndex + 2], sizeof(Interval_t));
-            memcpy(&(coeffs)[coeffsIndex + 3], &(powers)[powersIndex + 3], sizeof(Interval_t));
-        }
-        // Remainder loop
-        for (int j = degree - degree % UF; j < degree; j++) {
-            memcpy(&(coeffs)[i * degree + j], &(powers)[i + j], sizeof(Interval_t));  // coeffs[i][j] = powers[i + j]
         }
     }
 }
