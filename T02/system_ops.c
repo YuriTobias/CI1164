@@ -81,7 +81,7 @@ void leastSquaresSystem(Point_t points, Interval_t *restrict powers, Interval_t 
         initInterval("0", &terms[i]);
         initInterval("0", &powers[i]);
     }
-    for(int i = degree + 1; i <= degree + degree; i++) {
+    for (int i = degree + 1; i <= degree + degree; i++) {
         initInterval("0", &powers[i]);
     }
 
@@ -89,7 +89,7 @@ void leastSquaresSystem(Point_t points, Interval_t *restrict powers, Interval_t 
     powers[0].upper = k;
 
     // Unroll em k
-    for(int i = 0; i < k - k % UF; i+=UF) {
+    for (int i = 0; i < k - k % UF; i += UF) {
         aux[0].lower = 1.0;
         aux[0].upper = 1.0;
         aux[1].lower = 1.0;
@@ -98,7 +98,7 @@ void leastSquaresSystem(Point_t points, Interval_t *restrict powers, Interval_t 
         aux[2].upper = 1.0;
         aux[3].lower = 1.0;
         aux[3].upper = 1.0;
-        for(int j = 1; j <= degree; j++) {
+        for (int j = 1; j <= degree; j++) {
             // --
             intervalOperation(&(points.x[i]), &aux[0], 0, MULT, &aux[0]);
             intervalOperation(&aux[0], &(powers)[j], 0, SUM, &(powers)[j]);
@@ -120,7 +120,7 @@ void leastSquaresSystem(Point_t points, Interval_t *restrict powers, Interval_t 
             intervalOperation(&(points.y[i + 3]), &aux[3], 0, MULT, &auxB[3]);
             intervalOperation(&(terms)[j], &auxB[3], 0, SUM, &(terms)[j]);
         }
-        for(int j = degree + 1; j <= degree + degree; j++) {
+        for (int j = degree + 1; j <= degree + degree; j++) {
             intervalOperation(&(points.x[i]), &aux[0], 0, MULT, &aux[0]);
             intervalOperation(&aux[0], &(powers)[j], 0, SUM, &(powers)[j]);
             // --
@@ -135,22 +135,22 @@ void leastSquaresSystem(Point_t points, Interval_t *restrict powers, Interval_t 
         }
     }
     // Remainder
-    for(int i = k - k % UF; i < k; i++) {
+    for (int i = k - k % UF; i < k; i++) {
         aux[0].lower = 1.0;
         aux[0].upper = 1.0;
-        for(int j = 1; j <= degree; j++) {
+        for (int j = 1; j <= degree; j++) {
             intervalOperation(&(points.x[i]), &aux[0], 0, MULT, &aux[0]);
             intervalOperation(&aux[0], &(powers)[j], 0, SUM, &(powers)[j]);
             intervalOperation(&(points.y[i]), &aux[0], 0, MULT, &auxB[0]);
             intervalOperation(&(terms)[j], &auxB[0], 0, SUM, &(terms)[j]);
         }
-        for(int j = degree + 1; j <= degree + degree; j++) {
+        for (int j = degree + 1; j <= degree + degree; j++) {
             intervalOperation(&(points.x[i]), &aux[0], 0, MULT, &aux[0]);
             intervalOperation(&aux[0], &(powers)[j], 0, SUM, &(powers)[j]);
         }
     }
 
-    for(int i = 0; i < k; i++) {
+    for (int i = 0; i < k; i++) {
         intervalOperation(&(terms)[0], &(points.y[i]), 0, SUM, &(terms)[0]);
     }
 
@@ -254,7 +254,7 @@ void backSubstitution(Interval_t *coeffs, Interval_t *terms, Interval_t **soluti
 }
 
 void calcResidual(Point_t points, Interval_t *restrict solution, Interval_t **restrict residuals, int degree, int npoints) {
-    Interval_t result, result2, result3, result4, mult;
+    Interval_t result, result2, result3, result4, mult, powers, powers2, powers3, powers4;
     *residuals = (Interval_t *)malloc((npoints) * sizeof(Interval_t));
     // Unrolled on i
     for (int i = 0; i < npoints - npoints % UF; i += UF) {
@@ -262,19 +262,23 @@ void calcResidual(Point_t points, Interval_t *restrict solution, Interval_t **re
         initInterval("0", &result2);
         initInterval("0", &result3);
         initInterval("0", &result4);
+        initInterval("1", &powers);
+        initInterval("1", &powers2);
+        initInterval("1", &powers3);
+        initInterval("1", &powers4);
         for (int j = 0; j <= degree; j++) {
-            intervalOperation(&(points.x[i]), NULL, j, POW, &mult);      // mult = points[i][0] ^ j
-            intervalOperation(&mult, &(solution)[j], 0, MULT, &mult);    // mult = points[i][0] ^ j * solution[j]
+            intervalOperation(&powers, &(solution)[j], 0, MULT, &mult);  // mult = points[i][0] ^ j * solution[j]
             intervalOperation(&result, &mult, 0, SUM, &result);          // result += points[i][0] ^ j * solution[j]
-            intervalOperation(&(points.x[i + 1]), NULL, j, POW, &mult);  // mult = points[i][0] ^ j
-            intervalOperation(&mult, &(solution)[j], 0, MULT, &mult);    // mult = points[i][0] ^ j * solution[j]
-            intervalOperation(&result2, &mult, 0, SUM, &result2);        // result += points[i][0] ^ j * solution[j]
-            intervalOperation(&(points.x[i + 2]), NULL, j, POW, &mult);  // mult = points[i][0] ^ j
-            intervalOperation(&mult, &(solution)[j], 0, MULT, &mult);    // mult = points[i][0] ^ j * solution[j]
-            intervalOperation(&result3, &mult, 0, SUM, &result3);        // result += points[i][0] ^ j * solution[j]
-            intervalOperation(&(points.x[i + 3]), NULL, j, POW, &mult);  // mult = points[i][0] ^ j
-            intervalOperation(&mult, &(solution)[j], 0, MULT, &mult);    // mult = points[i][0] ^ j * solution[j]
-            intervalOperation(&result4, &mult, 0, SUM, &result4);        // result += points[i][0] ^ j * solution[j]
+            intervalOperation(&powers, &(points.x[i]), 0, MULT, &powers);
+            intervalOperation(&powers2, &(solution)[j], 0, MULT, &mult);         // mult = points[i+1][0] ^ j * solution[j]
+            intervalOperation(&result2, &mult, 0, SUM, &result2);                // result += points[i+1][0] ^ j * solution[j]
+            intervalOperation(&powers2, &(points.x[i + 1]), 0, MULT, &powers2);  // powers2 = points[i + 1][0] ^ j
+            intervalOperation(&powers3, &(solution)[j], 0, MULT, &mult);         // mult = points[i+2][0] ^ j * solution[j]
+            intervalOperation(&result3, &mult, 0, SUM, &result3);                // result += points[i+2][0] ^ j * solution[j]
+            intervalOperation(&powers3, &(points.x[i + 2]), 0, MULT, &powers3);  // powers3 = points[i + 2][0] ^ j
+            intervalOperation(&powers4, &(solution)[j], 0, MULT, &mult);         // mult = points[i+3][0] ^ j * solution[j]
+            intervalOperation(&result4, &mult, 0, SUM, &result4);                // result += points[i+3][0] ^ j * solution[j]
+            intervalOperation(&powers4, &(points.x[i + 3]), 0, MULT, &powers4);  // powers4 = points[i + 3][0] ^ j
         }
         intervalOperation(&(points.y[i]), &result, 0, SUB, &(*residuals)[i]);  // residuals[i] = points[i][1] - result
         intervalOperation(&(points.y[i + 1]), &result2, 0, SUB, &(*residuals)[i + 1]);
