@@ -15,6 +15,22 @@ inline void initInterval(char *number, Interval_t *interval) {
     interval->upper = atof(number);
 }
 
+inline void intervalMult(Interval_t *operandA, Interval_t *operandB, Interval_t *result) {
+    fesetround(FE_DOWNWARD);
+    result->lower = minDouble4(operandA->lower * operandB->lower, operandA->lower * operandB->upper, operandA->upper * operandB->lower,
+                               operandA->upper * operandB->upper);
+    fesetround(FE_UPWARD);
+    result->upper = maxDouble4(operandA->lower * operandB->lower, operandA->lower * operandB->upper, operandA->upper * operandB->lower,
+                               operandA->upper * operandB->upper);
+}
+
+inline void intervalSum(Interval_t *operandA, Interval_t *operandB, Interval_t *result) {
+    fesetround(FE_DOWNWARD);
+    result->lower = operandA->lower + operandB->lower;
+    fesetround(FE_UPWARD);
+    result->upper = operandA->upper + operandB->upper;
+}
+
 void intervalOperation(Interval_t *operandA, Interval_t *operandB, int exp, enum OPERATIONS operation, Interval_t *result) {
     Interval_t *copyA = (Interval_t *)malloc(sizeof(Interval_t));
     Interval_t *copyB = (Interval_t *)malloc(sizeof(Interval_t));

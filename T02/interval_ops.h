@@ -21,6 +21,10 @@ typedef struct {
  */
 void initInterval(char *number, Interval_t *interval);
 
+void intervalMult(Interval_t *operandA, Interval_t *operandB, Interval_t *result);
+
+void intervalSum(Interval_t *operandA, Interval_t *operandB, Interval_t *result);
+
 /**
  * Calculate an interval arithmetic operation between two intervals
  * @param operandA first operand

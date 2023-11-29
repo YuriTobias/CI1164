@@ -81,7 +81,7 @@ void leastSquaresSystem(Point_t points, Interval_t *restrict powers, Interval_t 
         initInterval("0", &terms[i]);
         initInterval("0", &powers[i]);
     }
-    for(int i = degree + 1; i <= degree + degree; i++) {
+    for (int i = degree + 1; i <= degree + degree; i++) {
         initInterval("0", &powers[i]);
     }
 
@@ -89,7 +89,7 @@ void leastSquaresSystem(Point_t points, Interval_t *restrict powers, Interval_t 
     powers[0].upper = k;
 
     // Unroll em k
-    for(int i = 0; i < k - k % UF; i+=UF) {
+    for (int i = 0; i < k - k % UF; i += UF) {
         aux[0].lower = 1.0;
         aux[0].upper = 1.0;
         aux[1].lower = 1.0;
@@ -98,60 +98,91 @@ void leastSquaresSystem(Point_t points, Interval_t *restrict powers, Interval_t 
         aux[2].upper = 1.0;
         aux[3].lower = 1.0;
         aux[3].upper = 1.0;
-        for(int j = 1; j <= degree; j++) {
+        for (int j = 1; j <= degree; j++) {
             // --
-            intervalOperation(&(points.x[i]), &aux[0], 0, MULT, &aux[0]);
-            intervalOperation(&aux[0], &(powers)[j], 0, SUM, &(powers)[j]);
-            intervalOperation(&(points.y[i]), &aux[0], 0, MULT, &auxB[0]);
-            intervalOperation(&(terms)[j], &auxB[0], 0, SUM, &(terms)[j]);
-            // --
-            intervalOperation(&(points.x[i + 1]), &aux[1], 0, MULT, &aux[1]);
-            intervalOperation(&aux[1], &(powers)[j], 0, SUM, &(powers)[j]);
-            intervalOperation(&(points.y[i + 1]), &aux[1], 0, MULT, &auxB[1]);
-            intervalOperation(&(terms)[j], &auxB[1], 0, SUM, &(terms)[j]);
-            // --
-            intervalOperation(&(points.x[i + 2]), &aux[2], 0, MULT, &aux[2]);
-            intervalOperation(&aux[2], &(powers)[j], 0, SUM, &(powers)[j]);
-            intervalOperation(&(points.y[i + 2]), &aux[2], 0, MULT, &auxB[2]);
-            intervalOperation(&(terms)[j], &auxB[2], 0, SUM, &(terms)[j]);
-            // --
-            intervalOperation(&(points.x[i + 3]), &aux[3], 0, MULT, &aux[3]);
-            intervalOperation(&aux[3], &(powers)[j], 0, SUM, &(powers)[j]);
-            intervalOperation(&(points.y[i + 3]), &aux[3], 0, MULT, &auxB[3]);
-            intervalOperation(&(terms)[j], &auxB[3], 0, SUM, &(terms)[j]);
+            intervalMult(&(points.x[i]), &aux[0], &aux[0]);
+            intervalSum(&aux[0], &(powers)[j], &(powers)[j]);
+            intervalMult(&(points.y[i]), &aux[0], &auxB[0]);
+            intervalSum(&(terms)[j], &auxB[0], &(terms)[j]);
+            // intervalOperation(&(points.x[i]), &aux[0], 0, MULT, &aux[0]);
+            // intervalOperation(&aux[0], &(powers)[j], 0, SUM, &(powers)[j]);
+            // intervalOperation(&(points.y[i]), &aux[0], 0, MULT, &auxB[0]);
+            // intervalOperation(&(terms)[j], &auxB[0], 0, SUM, &(terms)[j]);
+            // // --
+            intervalMult(&(points.x[i + 1]), &aux[1], &aux[1]);
+            intervalSum(&aux[1], &(powers)[j], &(powers)[j]);
+            intervalMult(&(points.y[i + 1]), &aux[1], &auxB[1]);
+            intervalSum(&(terms)[j], &auxB[1], &(terms)[j]);
+            // intervalOperation(&(points.x[i + 1]), &aux[1], 0, MULT, &aux[1]);
+            // intervalOperation(&aux[1], &(powers)[j], 0, SUM, &(powers)[j]);
+            // intervalOperation(&(points.y[i + 1]), &aux[1], 0, MULT, &auxB[1]);
+            // intervalOperation(&(terms)[j], &auxB[1], 0, SUM, &(terms)[j]);
+            // // --
+            intervalMult(&(points.x[i + 2]), &aux[2], &aux[2]);
+            intervalSum(&aux[2], &(powers)[j], &(powers)[j]);
+            intervalMult(&(points.y[i + 2]), &aux[2], &auxB[2]);
+            intervalSum(&(terms)[j], &auxB[2], &(terms)[j]);
+            // intervalOperation(&(points.x[i + 2]), &aux[2], 0, MULT, &aux[2]);
+            // intervalOperation(&aux[2], &(powers)[j], 0, SUM, &(powers)[j]);
+            // intervalOperation(&(points.y[i + 2]), &aux[2], 0, MULT, &auxB[2]);
+            // intervalOperation(&(terms)[j], &auxB[2], 0, SUM, &(terms)[j]);
+            // // --
+            intervalMult(&(points.x[i + 3]), &aux[3], &aux[3]);
+            intervalSum(&aux[3], &(powers)[j], &(powers)[j]);
+            intervalMult(&(points.y[i + 3]), &aux[3], &auxB[3]);
+            intervalSum(&(terms)[j], &auxB[3], &(terms)[j]);
+            // intervalOperation(&(points.x[i + 3]), &aux[3], 0, MULT, &aux[3]);
+            // intervalOperation(&aux[3], &(powers)[j], 0, SUM, &(powers)[j]);
+            // intervalOperation(&(points.y[i + 3]), &aux[3], 0, MULT, &auxB[3]);
+            // intervalOperation(&(terms)[j], &auxB[3], 0, SUM, &(terms)[j]);
         }
-        for(int j = degree + 1; j <= degree + degree; j++) {
-            intervalOperation(&(points.x[i]), &aux[0], 0, MULT, &aux[0]);
-            intervalOperation(&aux[0], &(powers)[j], 0, SUM, &(powers)[j]);
+        for (int j = degree + 1; j <= degree + degree; j++) {
+            intervalMult(&(points.x[i]), &aux[0], &aux[0]);
+            intervalSum(&aux[0], &(powers)[j], &(powers)[j]);
+            // intervalOperation(&(points.x[i]), &aux[0], 0, MULT, &aux[0]);
+            // intervalOperation(&aux[0], &(powers)[j], 0, SUM, &(powers)[j]);
             // --
-            intervalOperation(&(points.x[i + 1]), &aux[1], 0, MULT, &aux[1]);
-            intervalOperation(&aux[1], &(powers)[j], 0, SUM, &(powers)[j]);
+            intervalMult(&(points.x[i + 1]), &aux[1], &aux[1]);
+            intervalSum(&aux[1], &(powers)[j], &(powers)[j]);
+            // intervalOperation(&(points.x[i + 1]), &aux[1], 0, MULT, &aux[1]);
+            // intervalOperation(&aux[1], &(powers)[j], 0, SUM, &(powers)[j]);
             // --
-            intervalOperation(&(points.x[i + 2]), &aux[2], 0, MULT, &aux[2]);
-            intervalOperation(&aux[2], &(powers)[j], 0, SUM, &(powers)[j]);
+            intervalMult(&(points.x[i + 2]), &aux[2], &aux[2]);
+            intervalSum(&aux[2], &(powers)[j], &(powers)[j]);
+            // intervalOperation(&(points.x[i + 2]), &aux[2], 0, MULT, &aux[2]);
+            // intervalOperation(&aux[2], &(powers)[j], 0, SUM, &(powers)[j]);
             // --
-            intervalOperation(&(points.x[i + 3]), &aux[3], 0, MULT, &aux[3]);
-            intervalOperation(&aux[3], &(powers)[j], 0, SUM, &(powers)[j]);
+            intervalMult(&(points.x[i + 3]), &aux[3], &aux[3]);
+            intervalSum(&aux[3], &(powers)[j], &(powers)[j]);
+            // intervalOperation(&(points.x[i + 3]), &aux[3], 0, MULT, &aux[3]);
+            // intervalOperation(&aux[3], &(powers)[j], 0, SUM, &(powers)[j]);
         }
     }
     // Remainder
-    for(int i = k - k % UF; i < k; i++) {
+    for (int i = k - k % UF; i < k; i++) {
         aux[0].lower = 1.0;
         aux[0].upper = 1.0;
-        for(int j = 1; j <= degree; j++) {
-            intervalOperation(&(points.x[i]), &aux[0], 0, MULT, &aux[0]);
-            intervalOperation(&aux[0], &(powers)[j], 0, SUM, &(powers)[j]);
-            intervalOperation(&(points.y[i]), &aux[0], 0, MULT, &auxB[0]);
-            intervalOperation(&(terms)[j], &auxB[0], 0, SUM, &(terms)[j]);
+        for (int j = 1; j <= degree; j++) {
+            intervalMult(&(points.x[i]), &aux[0], &aux[0]);
+            intervalSum(&aux[0], &(powers)[j], &(powers)[j]);
+            // intervalOperation(&(points.x[i]), &aux[0], 0, MULT, &aux[0]);
+            // intervalOperation(&aux[0], &(powers)[j], 0, SUM, &(powers)[j]);
+            intervalMult(&(points.y[i]), &aux[0], &auxB[0]);
+            intervalSum(&(terms)[j], &auxB[0], &(terms)[j]);
+            // intervalOperation(&(points.y[i]), &aux[0], 0, MULT, &auxB[0]);
+            // intervalOperation(&(terms)[j], &auxB[0], 0, SUM, &(terms)[j]);
         }
-        for(int j = degree + 1; j <= degree + degree; j++) {
-            intervalOperation(&(points.x[i]), &aux[0], 0, MULT, &aux[0]);
-            intervalOperation(&aux[0], &(powers)[j], 0, SUM, &(powers)[j]);
+        for (int j = degree + 1; j <= degree + degree; j++) {
+            intervalMult(&(points.x[i]), &aux[0], &aux[0]);
+            intervalSum(&aux[0], &(powers)[j], &(powers)[j]);
+            // intervalOperation(&(points.x[i]), &aux[0], 0, MULT, &aux[0]);
+            // intervalOperation(&aux[0], &(powers)[j], 0, SUM, &(powers)[j]);
         }
     }
 
-    for(int i = 0; i < k; i++) {
-        intervalOperation(&(terms)[0], &(points.y[i]), 0, SUM, &(terms)[0]);
+    for (int i = 0; i < k; i++) {
+        intervalSum(&(terms)[0], &(points.y[i]), &(terms)[0]);
+        // intervalOperation(&(terms)[0], &(points.y[i]), 0, SUM, &(terms)[0]);
     }
 
     // for(int i = 0; i < degree; i++) {
