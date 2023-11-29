@@ -14,6 +14,7 @@ set xlabel  "Array size"
 # Gerando figura PNG
 set terminal png
 set ylabel  ARG1
+set logscale y 10
 set output ARG2
 plot ARG3 title ARG4 with linespoints, \
      ARG5 title ARG6 with linespoints
