@@ -4,6 +4,14 @@
 #include "interval_ops.h"
 
 /**
+ * Identifies the largest of two double numbers
+ * @param a first number
+ * @param b second number
+ * @return largest number
+ */
+double maxDouble2(double a, double b);
+
+/**
  * Identifies the smallest of four double numbers
  * @param a first number
  * @param b second number
@@ -22,31 +30,6 @@ double minDouble4(double a, double b, double c, double d);
  * @return largest number
  */
 double maxDouble4(double a, double b, double c, double d);
-
-/**
- * Identifies the largest of two double numbers
- * @param a first number
- * @param b second number
- * @return largest number
- */
-double maxDouble2(double a, double b);
-
-/**
- * Prints a formatted interval linear system
- * @param coeffs pointer to the matrix A of coefficients
- * @param terms pointer to the vector terms of independent terms
- * @param size size of the system
- * @return void
- */
-void printSystem(Interval_t *coeffs, Interval_t *terms, int size);
-
-/**
- * Prints a vector of points
- * @param points pointer to the vector of points
- * @param size size of the vector
- * @return void
- */
-void printPoints(Interval_t *points, int size);
 
 /**
  * Allocates memory for all necessary data structures related to the curves adjustment problem and initializes them with user inputs if
@@ -122,6 +105,23 @@ void backSubstitution(Interval_t *coeffs, Interval_t *terms, Interval_t **soluti
  * @param npoints number of points
  */
 void calcResidual(Point_t points, Interval_t *restrict solution, Interval_t **restrict residuals, int degree, int npoints);
+
+/**
+ * Prints a vector of points
+ * @param points pointer to the vector of points
+ * @param size size of the vector
+ * @return void
+ */
+void printPoints(Interval_t *points, int size);
+
+/**
+ * Prints a formatted interval linear system
+ * @param coeffs pointer to the matrix A of coefficients
+ * @param terms pointer to the vector terms of independent terms
+ * @param size size of the system
+ * @return void
+ */
+void printSystem(Interval_t *coeffs, Interval_t *terms, int size);
 
 /**
  * Prints the results of the program, including the solution of the system, the residuals and the execution times

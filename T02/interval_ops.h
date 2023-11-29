@@ -21,19 +21,49 @@ typedef struct {
  */
 void initInterval(char *number, Interval_t *interval);
 
-void intervalMult(Interval_t *operandA, Interval_t *operandB, Interval_t *result);
-
-void intervalSum(Interval_t *operandA, Interval_t *operandB, Interval_t *result);
-
 /**
- * Calculate an interval arithmetic operation between two intervals
+ * Calculate an interval arithmetic sum operation between two intervals
  * @param operandA first operand
- * @param operandB second operand (can be ANY if the operation is unary)
- * @param exp exponent for the power operation (can be ANY if the operation is not power)
- * @param operation operation to be performed (SUM, SUB, MULT, DIV, POW)
+ * @param operandB second operand
  * @param result pointer to the interval that will store the result
  * @return void
  */
-void intervalOperation(Interval_t *operandA, Interval_t *operandB, int exp, enum OPERATIONS operation, Interval_t *result);
+void intervalSum(Interval_t *operandA, Interval_t *operandB, Interval_t *result);
+
+/**
+ * Calculate an interval arithmetic operation of subtraction between two intervals
+ * @param operandA first operand
+ * @param operandB second operand 
+ * @param result pointer to the interval that will store the result
+ * @return void
+ */
+void intervalSub(Interval_t *operandA, Interval_t *operandB, Interval_t *result);
+
+/**
+ * Calculate an interval arithmetic multiplication operation between two intervals
+ * @param operandA first operand
+ * @param operandB second operand
+ * @param result pointer to the interval that will store the result
+ * @return void
+ */
+void intervalMult(Interval_t *operandA, Interval_t *operandB, Interval_t *result);
+
+/**
+ * Calculate an interval arithmetic operation of division between two intervals
+ * @param operandA first operand
+ * @param operandB second operand 
+ * @param result pointer to the interval that will store the result
+ * @return void
+ */
+void intervalDiv(Interval_t *operandA, Interval_t *operandB, Interval_t *result);
+
+/**
+ * Calculate a power interval arithmetic operation between two intervals
+ * @param operandA first operand
+ * @param exp exponent for the power operation (can be ANY if the operation is not power)
+ * @param result pointer to the interval that will store the result
+ * @return void
+ */
+void intervalPow(Interval_t *operandA, int exp, Interval_t *result);
 
 #endif  // INTERVAL_OPS_H
