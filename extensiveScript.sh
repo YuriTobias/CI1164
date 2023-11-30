@@ -6,8 +6,7 @@ LIKWID_HOME=/usr/local
 
 echo "performance" > /sys/devices/system/cpu/cpufreq/policy3/scaling_governor
 
-# sizes=(64 128 200 256 512 600 800 1024 2000 3000 4096 6000 7000 10000 50000 1000000, 10000000, 100000000, 1000000000)
-sizes=(64 128)
+sizes=(64 128 200 256 512 600 800 1024 2000 3000 4096 6000 7000 10000 50000 1000000 10000000 100000000)
 arraySize=${#sizes[@]}
 
 mkdir results > /dev/null 2>&1
