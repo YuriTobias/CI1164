@@ -268,10 +268,11 @@ void calcResidual(Point_t points, Interval_t *restrict solution, Interval_t **re
     // Remainder loop
     for (int i = npoints - npoints % UF; i < npoints; i++) {
         initInterval("0", &result);
+        initInterval("1", &powers);
         for (int j = 0; j <= degree; j++) {
-            intervalPow(&(points.x[i]), j, &mult);                  // mult = points.x[i] ^ j
-            intervalMult(&mult, &(solution)[j], &mult);             // mult = points.x[i] ^ j * solution[j]
-            intervalSum(&result, &mult, &result);                   // result += points.x[i] ^ j * solution[j]      
+            intervalMult(&powers, &(solution)[j], &mult);               // mult = points.x[i] ^ j * solution[j]
+            intervalSum(&result, &mult, &result);                       // result += points.x[i] ^ j * solution[j]      
+            intervalMult(&powers, &(points.x[i]), &powers);             // powers = points.x[i] ^ j
         }
         intervalSub(&(points.y[i]), &result, &(*residuals)[i]);     // residuals[i] = points.y[i] - result
     }
